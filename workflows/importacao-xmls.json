@@ -209,7 +209,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"filters\": {\n    \"emitterCnpj\": [\n      \"07150434000117\"\n    ],\n    \"emissionDate\": {\n      \"From\": \"{{ $now.minus({days: 7}).startOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\",\n      \"To\": \"{{ $now.endOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\"\n    }\n  },\n  \"fields\": [\n    \"document\"\n  ],\n  \"paginator\": \"\"\n}",
+        "jsonBody": "={\n  \"filters\": {\n    \"emitterCnpj\": [\n      \"07150434000117\",\n      \"10954989000126\",\n      \"80700024000192\"\n    ],\n    \"emissionDate\": {\n      \"From\": \"{{ $now.minus({days: 7}).startOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\",\n      \"To\": \"{{ $now.endOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\"\n    }\n  },\n  \"fields\": [\n    \"document\"\n  ],\n  \"paginator\": \"\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
