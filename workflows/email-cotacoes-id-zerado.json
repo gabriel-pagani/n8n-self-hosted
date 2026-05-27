@@ -1,0 +1,306 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH COTACOES AS (\n\tSELECT\n\t\tZMDWFLUIGCOTACAO.CODCOLIGADA, \n\t\tZMDWFLUIGCOTACAO.CODCOTACAO, \n\t\tZMDWFLUIGCOTACAO.IDFLUIG\n\n\tFROM ZMDWFLUIGCOTACAO\n\t\tJOIN TCCOTACAO ON (\n\t\t\tTCCOTACAO.CODCOLIGADA = ZMDWFLUIGCOTACAO.CODCOLIGADA AND\n\t\t\tTCCOTACAO.CODCOTACAO = ZMDWFLUIGCOTACAO.CODCOTACAO\n\t\t)\n\n\tWHERE 1=1\n\t\tAND ZMDWFLUIGCOTACAO.IDFLUIG = 0\n\t\tAND ZMDWFLUIGCOTACAO.CODCOTACAO IS NOT NULL\n\t\tAND TCCOTACAO.STSCOTACAO <> 7\n)\n\nSELECT \n\tCODCOLIGADA, \n\tCODCOTACAO, \n\tIDFLUIG, \n\t'Pendente' AS STATUS \n\nFROM COTACOES\n\nUNION ALL\n\nSELECT \n\tNULL, \n\tNULL, \n\tNULL, \n\t'Ok' \n\nWHERE NOT EXISTS (SELECT 1 FROM COTACOES)\n\nORDER BY \n    CODCOLIGADA, \n    CODCOTACAO\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        -144,
+        -16
+      ],
+      "id": "283db745-dcb6-4673-afb1-20e994120d7b",
+      "name": "Microsoft SQL",
+      "credentials": {
+        "microsoftSql": {
+          "id": "d5wJRoyLLTIDzOn8",
+          "name": "SQL Server"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        -16
+      ],
+      "id": "b1d8b440-b987-4f61-8281-700b15d06cd5",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -96
+      ],
+      "id": "749e4955-b3f8-4351-a1a5-427e4b069367",
+      "name": "Finish"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "99ce57b5-8976-42bc-a2e7-5be627bdf9a1",
+              "leftValue": "={{ $json.STATUS }}",
+              "rightValue": "Ok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        48,
+        -16
+      ],
+      "id": "f3740d49-044a-4bc9-b404-92f4d75b14d8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH COTACOES AS (\n\tSELECT\n\t\tZMDWFLUIGCOTACAO.CODCOLIGADA, \n\t\tZMDWFLUIGCOTACAO.CODCOTACAO, \n\t\tZMDWFLUIGCOTACAO.IDFLUIG\n\n\tFROM ZMDWFLUIGCOTACAO\n\t\tJOIN TCCOTACAO ON (\n\t\t\tTCCOTACAO.CODCOLIGADA = ZMDWFLUIGCOTACAO.CODCOLIGADA AND\n\t\t\tTCCOTACAO.CODCOTACAO = ZMDWFLUIGCOTACAO.CODCOTACAO\n\t\t)\n\n\tWHERE 1=1\n\t\tAND ZMDWFLUIGCOTACAO.IDFLUIG = 0\n\t\tAND ZMDWFLUIGCOTACAO.CODCOTACAO IS NOT NULL\n\t\tAND TCCOTACAO.STSCOTACAO <> 7\n)\n\nSELECT \n\tCODCOLIGADA, \n\tCODCOTACAO, \n\tIDFLUIG, \n\t'Pendente' AS STATUS \n\nFROM COTACOES\n\nUNION ALL\n\nSELECT \n\tNULL, \n\tNULL, \n\tNULL, \n\t'Ok' \n\nWHERE NOT EXISTS (SELECT 1 FROM COTACOES)\n\nORDER BY \n    CODCOLIGADA, \n    CODCOTACAO\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        496,
+        64
+      ],
+      "id": "140908ae-86fd-4f2f-b126-4fb6a95104db",
+      "name": "Microsoft SQL1",
+      "executeOnce": true,
+      "credentials": {
+        "microsoftSql": {
+          "id": "d5wJRoyLLTIDzOn8",
+          "name": "SQL Server"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        944,
+        -16
+      ],
+      "id": "f3562bb9-3b9e-44e2-9f67-e2241ae209e7",
+      "name": "Finish1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "99ce57b5-8976-42bc-a2e7-5be627bdf9a1",
+              "leftValue": "={{ $json.STATUS }}",
+              "rightValue": "Ok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        688,
+        64
+      ],
+      "id": "01953c67-8a15-4472-9465-c3b3f6b02abf",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        304,
+        64
+      ],
+      "id": "cb7931f9-12f8-4fb0-889e-bae3466937fa",
+      "name": "Wait",
+      "webhookId": "660cdcd2-8341-4436-b9e5-d4dcd9f821c3"
+    },
+    {
+      "parameters": {
+        "jsCode": "let rows = items.map(i => {\n  return `<tr>\n            <td>${i.json.CODCOLIGADA}</td>\n            <td>${i.json.CODCOTACAO}</td>\n            <td>${i.json.IDFLUIG}</td>\n          </tr>`;\n}).join(\"\");\n\nreturn [{\n  json: {\n    html: `\n    <h4>Cotações com o \"Id Fluig\" zerado</h4>\n    <table border=\"1\" cellpadding=\"5\">\n      <tr>\n        <th>Coligada</th>\n        <th>Cotação</th>\n        <th>Id Fluig</th>\n      </tr>\n      ${rows}\n    </table>\n    `\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        144
+      ],
+      "id": "372a65f9-0d04-4fed-9127-c1dcc60abd57",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "fromEmail": "gabriel.souza@gruposmi.com.br",
+        "toEmail": "tecnologia@gruposmi.com.br",
+        "subject": "Cotações a Serem Corrigidas no RM",
+        "html": "={{ $json.html }}",
+        "options": {
+          "ccEmail": "beatriz.marques@gruposmi.com.br"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1136,
+        144
+      ],
+      "id": "07e939b7-3d24-40a7-a7d8-f2d0ddac9ad1",
+      "name": "Send an Email",
+      "webhookId": "ef8fec2d-bb32-4fb7-8b12-cf1cb69bbc13",
+      "credentials": {
+        "smtp": {
+          "id": "IIk85gYPr1NVm1oX",
+          "name": "SMTP"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Microsoft SQL": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Microsoft SQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Finish",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft SQL1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Finish1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Microsoft SQL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "201d4019418c413f00e6cb40ad343f465452ee63cf8c3a4d19a9d9fec62602b7"
+  }
+}

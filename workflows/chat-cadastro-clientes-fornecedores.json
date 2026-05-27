@@ -1,0 +1,1705 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c41bdb25-b7c2-40fe-a569-a598dd77c29d",
+                    "leftValue": "={{ $json.id }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "New conversation"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e54e8dbd-296e-479f-b09f-b109d974205a",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "Awaiting cnpj",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Awaiting cnpj"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "1a798ce5-8534-4de0-ab60-a1a86fdce149",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "Awaiting ie",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Awaiting ie"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5627aac8-bfb7-4d57-b872-c33ab2eb95c6",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "Awaiting cnpj type",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Awaiting cnpj type"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "bf00ad4b-c3ed-47cd-96d2-174c79b150b0",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "Awaiting approval",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Awaiting approval"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        32
+      ],
+      "id": "f748f767-4a3a-49c9-95dc-2c310c62eb3d",
+      "name": "Switch",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        -48
+      ],
+      "id": "ba0ae482-a978-4eb1-b01d-bd0349aba885",
+      "name": "Telegram trigger",
+      "webhookId": "8571405b-2e5f-4b26-8301-084ea32a1d91",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chatId",
+              "keyValue": "={{ $json.message.chat.id }}"
+            },
+            {
+              "keyName": "updatedAt",
+              "condition": "gte",
+              "keyValue": "={{ $now.minus({ hours: 1 }) }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        80
+      ],
+      "id": "9c725ae7-46a3-4148-a917-4eab47361c30",
+      "name": "Get session",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "=Olá! Sou o CliFo. 🤖\n\nSou o robô responsável pelo cadastro de clientes e fornecedores de forma automatizada.\n\nPara iniciar, por favor envie o cnpj que será cadastrado:\n\nObs: digite \"Tchau\" a qualquer momento para encerrar nossa conversa",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1056,
+        -512
+      ],
+      "id": "045950d5-ab0d-4357-8349-0d42f463955a",
+      "name": "Welcome message",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+            "status": "Awaiting cnpj"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "cnpj",
+              "displayName": "cnpj",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ie",
+              "displayName": "ie",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        -512
+      ],
+      "id": "6ff4f603-a7af-44fe-a24a-538c06883c38",
+      "name": "Insert session"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "=Foi ótimo conversar com você! até a próxima. 👋",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        512,
+        -160
+      ],
+      "id": "bdbca72f-b1a7-45d2-9047-b133106f4a53",
+      "name": "Farewell message",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1b3b75bb-23a1-47c2-a59b-9e0a01e337c1",
+              "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+              "rightValue": "Tchau",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "82b7b5a1-f3fa-481e-a463-71fc65bcb00c",
+              "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+              "rightValue": "Não",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "6846b394-c499-41fb-a1b0-da2050a6dd17",
+              "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+              "rightValue": "Nao",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        240,
+        -48
+      ],
+      "id": "83164480-76b1-4936-a89b-12336add2509",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "deleteRows",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chatId",
+              "keyValue": "={{ $('Telegram trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        784,
+        -160
+      ],
+      "id": "88ca09ed-6a58-43d2-a42e-317526824b41",
+      "name": "Delete session",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "deleteRows",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chatId",
+              "keyValue": "={{ $('Telegram trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1328,
+        -512
+      ],
+      "id": "dd2e717f-8ed2-4199-8033-243fbcd85281",
+      "name": "Delete session1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a7ec30cd-e82e-4bd6-81ea-e40ee2d03cb0",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1328,
+        -240
+      ],
+      "id": "d8eed30a-08e4-444c-a22d-4a84d7134563",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const cnpj = $('Telegram trigger').first().json.message.text.replace(/[^\\d]+/g, '');\n\nfunction validarDigito(s, pesos) {\n    let soma = 0;\n    for (let i = 0; i < pesos.length; i++) {\n        soma += s[i] * pesos[i];\n    }\n    let resto = soma % 11;\n    return resto < 2 ? 0 : 11 - resto;\n}\n\nconst pesos1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];\nconst pesos2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];\n\nconst digito1 = validarDigito(cnpj, pesos1);\nconst digito2 = validarDigito(cnpj, pesos2);\n\nconst isValid = (digito1 === parseInt(cnpj[12]) && digito2 === parseInt(cnpj[13]));\n\nreturn { \n    cnpj: cnpj,\n    valid: isValid \n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        -240
+      ],
+      "id": "ba905629-eab7-49ed-bb4d-d42241101a45",
+      "name": "Cnpj validator"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "=O cnpj informado é inválido! Envie novamente:",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        -144
+      ],
+      "id": "8ef57087-5e64-4fac-b13b-fe31bf2186c3",
+      "name": "Invalid cnpj",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a7ec30cd-e82e-4bd6-81ea-e40ee2d03cb0",
+              "leftValue": "={{ $('Telegram trigger').item.json.message.text.replace(/[^\\d]+/g, '') }}",
+              "rightValue": false,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1056,
+        288
+      ],
+      "id": "fa999bfb-a605-4921-8a43-e695159c8f26",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "=A inscrição estadual informada é inválida! Envie novamente:\n\nObs: digite 0 caso não exista ou 1 caso seja isento",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        384
+      ],
+      "id": "d538e3d8-4272-4494-8f12-085d571bc0a3",
+      "name": "Invalid ie",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+                    "rightValue": "0",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "443af8be-53e9-4814-90a3-185428a082d8"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Não contribuinte"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "1ed8ce55-3921-4ccf-bff7-5f3484f3dd20",
+                    "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+                    "rightValue": "1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Isento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c8feaadc-bfd1-4d55-b2d2-ac8cae9e515d",
+                    "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+                    "rightValue": "2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Contribuinte"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        160
+      ],
+      "id": "db9678a2-9fa9-4f76-9076-4ccc7d19ce53",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "=Agora envie a inscrição estadual:\n\nObs: digite 0 caso não exista ou 1 caso seja isento",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1872,
+        -336
+      ],
+      "id": "539445e8-b85b-4603-9569-96867a6873c3",
+      "name": "Get ie",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chatId",
+              "keyValue": "={{ $('Telegram trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "Awaiting ie",
+            "cnpj": "={{ $('Cnpj validator').item.json.cnpj }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "cnpj",
+              "displayName": "cnpj",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ie",
+              "displayName": "ie",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        -336
+      ],
+      "id": "bf695e68-c7a0-474a-b771-8e6886b16597",
+      "name": "Update session",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chatId",
+              "keyValue": "={{ $('Telegram trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "Awaiting cnpj type"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "cnpj",
+              "displayName": "cnpj",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ie",
+              "displayName": "ie",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        32
+      ],
+      "id": "abdc58d1-781b-4f27-bccc-92b963137e90",
+      "name": "Update session1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chatId",
+              "keyValue": "={{ $('Telegram trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "Awaiting cnpj type",
+            "ie": "isento"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "cnpj",
+              "displayName": "cnpj",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ie",
+              "displayName": "ie",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "tipo",
+              "displayName": "tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        176
+      ],
+      "id": "fa890875-b165-475f-a8ff-8f44679a7add",
+      "name": "Update session2",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chatId",
+              "keyValue": "={{ $('Telegram trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "Awaiting cnpj type",
+            "ie": "={{ $('Telegram trigger').item.json.message.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "cnpj",
+              "displayName": "cnpj",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ie",
+              "displayName": "ie",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "tipo",
+              "displayName": "tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        320
+      ],
+      "id": "31324c0d-ae54-44af-a91a-6c974ebab6f7",
+      "name": "Update session3",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.42.7:8008/register",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cnpj_type\": \"{{ $json.type }}\",\n  \"cnpj\": \"{{ $json.cnpj }}\",\n  \"ie\": \"{{ $json.ie }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1328,
+        944
+      ],
+      "id": "d9f5c9ff-efc6-43bc-a3bc-599ac5c2aa43",
+      "name": "HTTP Request",
+      "alwaysOutputData": false,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "4ilPaAbePbwhgk7E",
+          "name": "CliFo Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "=Agora envie o tipo de cnpj:\n\nObs: digite F para fornecedor ou C para cliente",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1872,
+        176
+      ],
+      "id": "8baf6b2e-9f55-4975-b21d-7f3a103eea79",
+      "name": "Get cnpj type",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a7ec30cd-e82e-4bd6-81ea-e40ee2d03cb0",
+              "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+              "rightValue": "F",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "f6dfb92a-f5a0-4eae-ae51-a75fd2f43d1d",
+              "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+              "rightValue": "C",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1056,
+        656
+      ],
+      "id": "ef45c8ca-1996-4714-8c81-9601caada67d",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chatId",
+              "keyValue": "={{ $('Telegram trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "Awaiting approval",
+            "type": "={{ $('Telegram trigger').item.json.message.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "cnpj",
+              "displayName": "cnpj",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ie",
+              "displayName": "ie",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1328,
+        560
+      ],
+      "id": "c1785ef6-a63e-4199-a455-727c63af2ead",
+      "name": "Update session4",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "=Todas as informações foram salvas! Segue os dados para conferência:\n  - tipo: {{ $json.type }}\n  - cnpj: {{ $json.cnpj }}\n  - ie: {{ $json.ie }}\n\nObs: Para iniciar o cadastro digite \"Cadastrar\" e para cancelar digite \"Tchau\"",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        560
+      ],
+      "id": "91e8b4a7-e3d8-4a24-a450-56b7ed22d773",
+      "name": "Get approval",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "=O tipo de cnpj informado é inválido! Envie novamente:\n\nObs: digite F para fornecedor ou C para cliente",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        752
+      ],
+      "id": "31837d22-d670-41e8-b1f3-9023c2322ecb",
+      "name": "Invalid cnpj type",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a7ec30cd-e82e-4bd6-81ea-e40ee2d03cb0",
+              "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+              "rightValue": "Cadastrar",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "040dfc58-697b-4937-b3c5-e46320f7828e",
+              "leftValue": "={{ $('Telegram trigger').item.json.message.text }}",
+              "rightValue": "Sim",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1056,
+        1024
+      ],
+      "id": "0aa92e5d-230f-443c-bc70-9aa40eda9fc5",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "=Não consegui compreender! Posso cadastrar?\n\nSegue os dados para conferência:\n  - tipo: {{ $('Get session').item.json.type }}\n  - cnpj: {{ $('Get session').item.json.cnpj }}\n  - ie: {{ $('Get session').item.json.ie }}\n\nObs: Para iniciar o cadastro digite \"Cadastrar\" e para cancelar digite \"Tchau\"",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        1120
+      ],
+      "id": "09813a13-e29c-4b90-825d-8accc1a47244",
+      "name": "Invalid approval",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.message }}, CODCFO: {{ $json.codcfo }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        944
+      ],
+      "id": "93b445fe-be62-4e65-876d-8d8e35e90e95",
+      "name": "Test",
+      "webhookId": "df8c420c-2a83-4fbb-9e1d-e5509dadcccc",
+      "credentials": {
+        "telegramApi": {
+          "id": "lDhFDa2zBu5DLx3c",
+          "name": "Telegram"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteRows",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wguoFqHDJQ1ZhkB1",
+          "mode": "list",
+          "cachedResultName": "Controle de Estado da Automação de Clientes e Fornecedores",
+          "cachedResultUrl": "/projects/83aKqTSmeWsQAgb8/datatables/wguoFqHDJQ1ZhkB1"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chatId",
+              "keyValue": "={{ $('Telegram trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1872,
+        944
+      ],
+      "id": "73bce2a0-6437-4808-84e7-8d7dd21ddbf8",
+      "name": "Delete session2",
+      "alwaysOutputData": false
+    }
+  ],
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Welcome message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cnpj validator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get session": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Welcome message": {
+      "main": [
+        [
+          {
+            "node": "Delete session1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Farewell message": {
+      "main": [
+        [
+          {
+            "node": "Delete session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Farewell message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete session1": {
+      "main": [
+        [
+          {
+            "node": "Insert session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Update session",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid cnpj",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cnpj validator": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid ie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Update session1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update session2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update session3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get ie": {
+      "main": [
+        []
+      ]
+    },
+    "Update session": {
+      "main": [
+        [
+          {
+            "node": "Get ie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update session1": {
+      "main": [
+        [
+          {
+            "node": "Get cnpj type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update session2": {
+      "main": [
+        [
+          {
+            "node": "Get cnpj type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update session3": {
+      "main": [
+        [
+          {
+            "node": "Get cnpj type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Test",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Update session4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid cnpj type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update session4": {
+      "main": [
+        [
+          {
+            "node": "Get approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test": {
+      "main": [
+        [
+          {
+            "node": "Delete session2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "201d4019418c413f00e6cb40ad343f465452ee63cf8c3a4d19a9d9fec62602b7"
+  }
+}

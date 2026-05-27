@@ -1,0 +1,142 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "470d1cb1-6a7a-46af-acda-12839a753252",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "command": "df -P / | tail -n 1 | awk '{print $5}' | tr -d '%'"
+      },
+      "id": "0e80e91a-3bf9-4979-8606-5b7c690fcb8f",
+      "name": "Check Disk Space",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{parseInt($json.stdout)}}",
+              "operation": "largerEqual",
+              "value2": 85
+            }
+          ]
+        }
+      },
+      "id": "0a673e4b-4fdb-4157-87a0-9561b6e6a9bf",
+      "name": "If Capacity >= 85%",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "gabriel.souza@gruposmi.com.br",
+        "toEmail": "tecnologia@gruposmi.com.br",
+        "subject": "=⚠️ Servidor n8n com {{$json.stdout}}% de uso ⚠️",
+        "text": "=Atenção,\n\nO servidor onde o n8n está hospedado (192.168.42.7) atingiu {{$json.stdout}}% de capacidade no disco principal.\n\nPor favor, acesse o servidor e libere espaço (limpando execuções antigas ou logs) para evitar que o sistema pare.",
+        "options": {
+          "ccEmail": "gabriel.souza@gruposmi.com.br"
+        }
+      },
+      "id": "6f79b805-321a-4b0c-8438-b938990c2ba5",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -64
+      ],
+      "webhookId": "3dd69088-e853-41b2-9799-9fc097cf1757",
+      "credentials": {
+        "smtp": {
+          "id": "IIk85gYPr1NVm1oX",
+          "name": "SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        128,
+        128
+      ],
+      "id": "3d4033bc-3481-4386-9101-32c9ccf5f46f",
+      "name": "Finish"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Disk Space",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Disk Space": {
+      "main": [
+        [
+          {
+            "node": "If Capacity >= 85%",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Capacity >= 85%": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "201d4019418c413f00e6cb40ad343f465452ee63cf8c3a4d19a9d9fec62602b7"
+  }
+}

@@ -1,0 +1,226 @@
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  postgres:
+  redis:
+  n8n:
+  n8n_tmp:
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: redis-server --appendonly yes --appendfsync everysec
+    restart: unless-stopped
+    networks:
+      - network
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 256m
+    #       cpus: '0.5'
+    #     reservations:
+    #       memory: 128m
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: unless-stopped
+    networks:
+      - network
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_POSTGRESDB_DATABASE}
+      - POSTGRES_USER=${DB_POSTGRESDB_USER}
+      - POSTGRES_PASSWORD=${DB_POSTGRESDB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_POSTGRESDB_USER} -d ${DB_POSTGRESDB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 512m
+    #       cpus: '1.0'
+    #     reservations:
+    #       memory: 256m
+
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin
+  #   restart: unless-stopped
+  #   networks:
+  #     - network
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+  #     - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+  #   ports:
+  #     - "5050:80"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   logging: *default-logging
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 512m
+  #         cpus: '0.5'
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    command: start
+    restart: unless-stopped
+    networks:
+      - network
+    volumes:
+      - n8n:/home/node/.n8n
+      - n8n_tmp:/home/node/.tmp
+    env_file:
+      - .env   
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    logging: *default-logging
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 2g
+    #       cpus: '1.0'
+    #     reservations:
+    #       memory: 1g
+
+  n8n_webhook:
+    image: n8nio/n8n:latest
+    container_name: n8n_webhook
+    command: webhook
+    restart: unless-stopped
+    networks:
+      - network
+    volumes:
+      - n8n:/home/node/.n8n
+      - n8n_tmp:/home/node/.tmp
+    env_file:
+      - .env  
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    logging: *default-logging
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 2g
+    #       cpus: '3'
+    #     reservations:
+    #       memory: 1g
+
+  n8n_worker:
+    image: n8nio/n8n:latest
+    container_name: n8n_worker
+    command: worker --concurrency=10
+    restart: unless-stopped
+    networks:
+      - network
+    volumes:
+      - n8n:/home/node/.n8n
+      - n8n_tmp:/home/node/.tmp
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    logging: *default-logging
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 2g
+    #       cpus: '3'
+    #     reservations:
+    #       memory: 1g
+
+  n8n_task_runner:
+    image: n8nio/runners:latest
+    container_name: n8n_task_runner
+    restart: unless-stopped
+    networks:
+      - network
+    environment:
+      - N8N_RUNNERS_TASK_BROKER_URI=http://n8n:5679
+      - N8N_RUNNERS_AUTH_TOKEN=${N8N_RUNNERS_AUTH_TOKEN}
+    depends_on:
+      - n8n
+    logging: *default-logging
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 256m
+    #       cpus: '0.5'
+    #     reservations:
+    #       memory: 128m
+
+  n8n_task_runner_worker:
+    image: n8nio/runners:latest
+    container_name: n8n_task_runner_worker
+    restart: unless-stopped
+    networks:
+      - network
+    environment:
+      - N8N_RUNNERS_TASK_BROKER_URI=http://n8n_worker:5679
+      - N8N_RUNNERS_AUTH_TOKEN=${N8N_RUNNERS_AUTH_TOKEN}
+    depends_on:
+      - n8n_worker
+    logging: *default-logging
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 256m
+    #       cpus: '0.5'
+    #     reservations:
+    #       memory: 128m
+
+  cloudflare:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare
+    command: tunnel --no-autoupdate run
+    restart: unless-stopped
+    networks:
+      - network
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TOKEN}
+    depends_on:
+      - n8n
+      - n8n_webhook
+      - n8n_worker
+    logging: *default-logging
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 128m
+    #       cpus: '0.25'
+    #     reservations:
+    #       memory: 64m

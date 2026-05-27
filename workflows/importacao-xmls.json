@@ -1,0 +1,303 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://api.arquivei.com.br/v1/nfse/emitted?cnpj[]=07150434000117",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "1"
+            },
+            {
+              "name": "format_type",
+              "value": "json"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-ID",
+              "value": ""
+            },
+            {
+              "name": "X-API-KEY",
+              "value": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -128,
+        -80
+      ],
+      "id": "c1844aea-1efb-4e00-91d0-72980d2b153c",
+      "name": "Consulta XMLs"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://apptotvs.sinasc.com.br:8051/api/mov/v1/Movements",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        912,
+        -80
+      ],
+      "id": "97de27e1-afe7-4021-a131-5edfc28472f2",
+      "name": "Registra Movimento",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "g4QYsmIRsSE8hGsr",
+          "name": "Consulta XML"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "companyId = str(_items[0][\"json\"][\"companyId\"])\nNFeAccesskey = str(_items[0][\"json\"][\"NFeAccesskey\"])\nnumber = str(_items[0][\"json\"][\"number\"])\nseries = str(_items[0][\"json\"][\"series\"])\ncustomerVendorCode = str(_items[0][\"json\"][\"customerVendorCode\"])\nunitPrice = float(_items[0][\"json\"][\"unitPrice\"])\n\npayload = {\n    \"aplicationIntegration\": \"T\",\n    \"internalId\": f\"{companyId}|99999999\",\n    \"companyId\": companyId,\n    \"movementId\": 99999999,\n    \"branchId\": 1,\n    \"movementTypeCode\": \"2.2.04\",  \n    \"NFeAccesskey\": NFeAccesskey,\n    \"number\": number.zfill(9),\n    \"series\": series,\n    \"type\": \"S\",\n    \"documentTypeCode\": \"NFSE\",\n    \"customerVendorCompanyId\": companyId,\n    \"customerVendorCode\": customerVendorCode,\n    \"paymentTermCode\": \"AV\",\n    \"observation\": \"Movimentação Importada Via API\",\n    \"movementItems\": [\n        {\n            \"aplicationIntegration\": \"T\",    \n            \"companyId\": companyId,\n            \"branchId\": 1,    \n            \"movementId\": 99999999,\n            \"warehouseCode\": \"01.001\",\n            \"sequentialId\": 1,\n            \"sequentialNumber\": 1,\n            \"productId\": 138918 if companyId == \"1\" else (138898 if companyId == \"5\" else (138917 if companyId == \"6\" else None)),\n            \"quantity\": 1.0,\n            \"unitPrice\": unitPrice\n        }\n    ],\n    \"transportData\": [\n        {\n        \"companyId\": 5,\n        \"movementId\": 99999999\n        }\n    ],\n    \"complementaryFields\": {\n        \"abatret\": \"0\"\n    }\n}\n\nreturn [{\"json\": {\"body\": payload}}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        704,
+        -80
+      ],
+      "id": "77aa0a39-c65c-43cb-9c1b-03923e1ec4ab",
+      "name": "Configura Payload"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b901884c-64d9-4bc0-b41e-5fc4d0695b46",
+              "name": "Chave de Acesso",
+              "value": "={{ $json.data[0].xml.Nfse.InfNfse.CodigoVerificacao }}",
+              "type": "string"
+            },
+            {
+              "id": "e2365ef5-6d9b-463f-a4dd-e6fb838bc067",
+              "name": "Número",
+              "value": "={{ $json.data[0].xml.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}",
+              "type": "string"
+            },
+            {
+              "id": "583d3f50-9739-483d-93e0-222ddff33b4b",
+              "name": "Série",
+              "value": "={{ $json.data[0].xml.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Serie }}",
+              "type": "string"
+            },
+            {
+              "id": "d0ab4862-b478-4c9c-a1f0-7e8930cdcadf",
+              "name": "Prestador",
+              "value": "={{ $json.data[0].xml.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
+              "type": "string"
+            },
+            {
+              "id": "fd4b8be9-712b-4e6e-b8d9-5718397a27f7",
+              "name": "Tomador",
+              "value": "={{ $json.data[0].xml.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Tomador.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
+              "type": "string"
+            },
+            {
+              "id": "93d7c80a-102c-47a3-9225-deb8c7ce38f7",
+              "name": "Valor Base",
+              "value": "={{ $json.data[0].xml.Nfse.InfNfse.ValoresNfse.BaseCalculo }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        -80
+      ],
+      "id": "04edc06a-7674-4ed6-b0fe-9819329cfb61",
+      "name": "Formata Dados"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "17eac68c-2fc3-4787-8170-3d8f8b8eb64e",
+              "name": "companyId",
+              "value": "={{ $json.companyId }}",
+              "type": "number"
+            },
+            {
+              "id": "63cd8328-a359-4b0a-8c3f-da29cea37650",
+              "name": "NFeAccesskey",
+              "value": "={{ $('Formata Dados').item.json['Chave de Acesso'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8eb08e98-88f3-4509-accc-f00290cab4ab",
+              "name": "number",
+              "value": "={{ $('Formata Dados').item.json['Número'] }}",
+              "type": "string"
+            },
+            {
+              "id": "477c41c8-effa-4cba-8aba-def4c8897d44",
+              "name": "series",
+              "value": "={{ $('Formata Dados').item.json['Série'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c5c061c0-25f1-486d-89f1-de163218e8d4",
+              "name": "customerVendorCode",
+              "value": "={{ $json.customerVendorCode }}",
+              "type": "string"
+            },
+            {
+              "id": "356d0393-8b55-4298-951e-102edc39d7c3",
+              "name": "unitPrice",
+              "value": "={{ $('Formata Dados').item.json['Valor Base'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        496,
+        -80
+      ],
+      "id": "28b4d088-c1f8-403b-90fe-0eb702e5b343",
+      "name": "Padroniza Dados"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO \n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.Prestador }}') \n\tAND CGCCFO = '{{ $json.Tomador }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        -80
+      ],
+      "id": "c593677e-b0a5-4f74-a47c-17266ae5108f",
+      "name": "Consulta Empresas",
+      "credentials": {
+        "microsoftSql": {
+          "id": "d5wJRoyLLTIDzOn8",
+          "name": "SQL Server"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        -80
+      ],
+      "id": "4e2a2d69-fcfe-452f-af63-cd34894d5d0e",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "Consulta XMLs": {
+      "main": [
+        [
+          {
+            "node": "Formata Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configura Payload": {
+      "main": [
+        [
+          {
+            "node": "Registra Movimento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata Dados": {
+      "main": [
+        [
+          {
+            "node": "Consulta Empresas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Padroniza Dados": {
+      "main": [
+        [
+          {
+            "node": "Configura Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta Empresas": {
+      "main": [
+        [
+          {
+            "node": "Padroniza Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Consulta XMLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "201d4019418c413f00e6cb40ad343f465452ee63cf8c3a4d19a9d9fec62602b7"
+  }
+}

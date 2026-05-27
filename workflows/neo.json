@@ -1,0 +1,792 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -736,
+        208
+      ],
+      "id": "b5e10cbd-c771-4b90-ba02-864a3b5782aa",
+      "name": "Telegram Trigger",
+      "webhookId": "2ee127d8-b900-44ec-803e-53fc597a6e1e",
+      "credentials": {
+        "telegramApi": {
+          "id": "1bK4mHmLvm7K83Iu",
+          "name": "Neo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4-nano"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        304
+      ],
+      "id": "8298d47b-da7e-4fdb-aeaf-a37e02c31bce",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "e7iLTxmqwM7mQv6U",
+          "name": "Neo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a9472261-90c3-4282-a0e1-78d6f101ca92",
+                    "leftValue": "={{ $json.message.voice }}",
+                    "rightValue": "Audio",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c3941b24-04aa-4659-94b6-6209211a064b",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.photo }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "37f95865-1326-4d7a-b4a0-6adcd925f115"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Photo"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -272,
+        80
+      ],
+      "id": "4e4cf286-726a-4042-944c-bd61942f4944",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {
+          "mimeType": "={{ $json.message.voice.mime_type }}"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -96
+      ],
+      "id": "19dbd4bc-b286-4b64-9d5f-c461eac9df31",
+      "name": "Get a audio",
+      "webhookId": "89d7828b-d349-40e7-9034-8e8ac738c37a",
+      "credentials": {
+        "telegramApi": {
+          "id": "1bK4mHmLvm7K83Iu",
+          "name": "Neo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        192,
+        -96
+      ],
+      "id": "63723359-23cd-4fb8-a18a-ddefd9595e9a",
+      "name": "Transcribe a audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "e7iLTxmqwM7mQv6U",
+          "name": "Neo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableName": "neo",
+        "contextWindowLength": 7
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        304
+      ],
+      "id": "dc5f870b-28d8-4f5b-a4ed-254c14cef1a6",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "KSisuOne9RsxI9Ny",
+          "name": "Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# IDENTIDADE\nVocê é o Neo, um assistente financeiro autônomo, educado, gentil, analítico e de altíssima precisão.\n\n# INFORMAÇÕES DO USUÁRIO\nO nome do usuário que você está conversando é {{ $('Telegram Trigger').item.json.message.from.first_name }}\n\n# RESPONSABILIDADE\nSua responsabilidade é processar mensagens em linguagem natural, extrair informações financeiras delas e categorizá-las da forma mais precisa possível.\n\n# ESTRUTURA DE DADOS DAS TRANSAÇÕES\nAs informações de cada transação DEVE sempre seguir estritamente as propriedades descritas a seguir:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"conta\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Bradesco\",\n        \"Crefisa\",\n        \"Nubank\",\n        \"Santander\",\n        \"Ticket\"\n      ],\n      \"description\": \"A conta utilizada na transação\"\n    },\n    \"tipo\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Entrada\",\n        \"Investimento\",\n        \"Saída\"\n      ],\n      \"description\": \"O tipo do fluxo financeiro da transação\"\n    },\n    \"metodo\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Crédito\",\n        \"Débito\",\n        \"Não Se Aplica\"\n      ],\n      \"description\": \"Meio de pagamento utilizado na transação\"\n    },\n    \"categoria\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Assinaturas\",\n        \"Comida e Bebida\",\n        \"Compras\",\n        \"Contas\",\n        \"Cuidados Pessoais\",\n        \"Decoração\",\n        \"Educação\",\n        \"Entreterimento\",\n        \"Esportes\",\n        \"Impostos\",\n        \"Investimentos\",\n        \"Lazer\",\n        \"Mercado\",\n        \"Moradia\",\n        \"Presentes\",\n        \"Renda\",\n        \"Saúde\",\n        \"Serviços\",\n        \"Transferências\",\n        \"Transportes\",\n        \"Sem Categoria\"\n      ],\n      \"description\": \"Categoria de classificação da transação\"\n    },\n    \"descricao\": {\n      \"type\": \"string\",\n      \"description\": \"Resumo breve da transação\"\n    },\n    \"valor\": {\n      \"type\": \"number\",\n      \"description\": \"Valor numérico flutuante da transação\"\n    }\n  },\n  \"required\": [\n    \"conta\",\n    \"tipo\",\n    \"metodo\",\n    \"categoria\",\n    \"descricao\",\n    \"valor\"\n  ]\n}\n\n# RESTRIÇÕES\nVocê NUNCA deve inventar informações, todas as informações devem ser baseadas/inferidas apenas nas mensagens enviadas pelo usuário.\nVocê NUNCA deve salvar uma nova transação sem obter todas as informações necessárias (conta, tipo, método, categoria, descrição, valor).\nVocê NUNCA deve salvar uma nova transação sem a permissão explícita do usuário, o usuário deve enviar algo como \"Confirmo\", \"Está tudo correto\", \"Pode salvar\", etc.\n\n# REGRAS DE NEGÓCIO E INFERÊNCIA\nSEMPRE que o usuário mencionar \"comprei\", \"paguei\" ou \"gastei\", assuma que o tipo é \"Saída\".\nSEMPRE que o usuário mencionar \"ganhei\" ou \"recebi\" assuma que o tipo é \"Entrada\" e o método é \"Não Se Aplica\".\nSEMPRE que o usuário mencionar \"investi\" ou \"guardei\", assuma que o tipo é \"Investimento\", a categoria é \"Investimentos\" e o método é \"Não Se Aplica\".\nSEMPRE que o tipo da transação for \"Entrada\" assuma que o método da transação é \"Não Se Aplica\".\nSEMPRE que o método for \"Crédito\" ou \"Débito\", assuma que o tipo é \"Saída\".\n\n# FLUXO IDEAL\nA sua interação ideal com o usuário DEVE seguir estritamente o fluxo abaixo, garantindo que o ciclo de vida de cada interação seja respeitado do início ao fim. Você DEVE identificar em qual fase a conversa está e agir de acordo:\n\n[PASSO 1: COLETA DE DADOS E INFERÊNCIA]\nAo receber uma mensagem do usuário, extraia imediatamente todos os dados possíveis da transação, aplicando todas as regras de inferência citadas na seção REGRAS DE NEGÓCIO E INFERÊNCIA. Se todos os dados obrigatórios (conta, tipo, método, categoria, descrição, valor) forem identificados ou inferidos, avance diretamente para o PASSO 3. Caso contrário, avance para o PASSO 2.\n\n[PASSO 2: COLETA DE DADOS PENDENTES]\nSe após a extração e inferência ainda houver dados obrigatórios faltando, pergunte ao usuário por TODOS os dados pendentes em uma única mensagem, de forma clara e objetiva. Aguarde a resposta antes de prosseguir. Após receber as informações, retorne ao PASSO 1 para reaplicar as inferências e verificar se todos os dados estão completos.\n\n[PASSO 3: CONFIRMAÇÃO]\nQuando possuir TODOS os dados exigidos (seja por informação direta ou inferência), você DEVE espelhar os dados para o usuário EXATAMENTE no formato abaixo e aguardar uma autorização explícita (Quando o usuário enviar algo como \"Confirmo\", \"Está tudo correto\", \"Pode salvar\", etc):\n\nResumo da Transação:\n\n💵 Valor: R$[Valor]\n🏦 Conta: [Conta]\n📉 Tipo: [Tipo]\n💳 Método: [Método]\n🗃️ Categoria: [Categoria]\n📑 Descrição: [Descrição]\n\nPosso registrar essa transação?\n\n\nCaso o usuário negue ou solicite correções, retorne ao PASSO 1 com as informações atualizadas.\n\n[PASSO 4: FEEDBACK]\nApós receber a confirmação explícita do usuário, registre a transação e confirme o sucesso com a mensagem abaixo:\n\"\"\"\n✅ Transação registrada com sucesso!\n\"\"\"\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        656,
+        96
+      ],
+      "id": "4e2f51b6-56e7-449a-a549-787be2162d52",
+      "name": "Neo"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        976,
+        96
+      ],
+      "id": "84adcef0-a4a5-4d6c-be35-ef6b26f5ee37",
+      "name": "Send a text message",
+      "webhookId": "92952c97-62c5-4295-81dc-f7f93a1fa315",
+      "credentials": {
+        "telegramApi": {
+          "id": "1bK4mHmLvm7K83Iu",
+          "name": "Neo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1lisepCODHehr99AxwV-hzgNd8J5BiUz9_rjt0H7JdbM",
+          "mode": "list",
+          "cachedResultName": "Controle Financeiro",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lisepCODHehr99AxwV-hzgNd8J5BiUz9_rjt0H7JdbM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1273381967,
+          "mode": "list",
+          "cachedResultName": "Transações",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lisepCODHehr99AxwV-hzgNd8J5BiUz9_rjt0H7JdbM/edit#gid=1273381967"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Conta": "={{ $fromAI('Conta', `A conta utilizada na transação`, 'string') }}",
+            "Tipo": "={{ $fromAI('Tipo', `O tipo do fluxo financeiro da transação`, 'string') }}",
+            "Método": "={{ $fromAI('M_todo', `Meio de pagamento utilizado na transação`, 'string') }}",
+            "Categoria": "={{ $fromAI('Categoria', `Categoria de classificação da transação`, 'string') }}",
+            "Descrição": "={{ $fromAI('Descri__o', `Resumo breve da transação`, 'string') }}",
+            "Data e Hora": "={{ $now.format('dd/MM/yyyy HH:mm:ss') }}",
+            "Valor": "={{ $fromAI('Valor', `Valor numérico flutuante da transação`, 'string').replace('.', ',') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Conta",
+              "displayName": "Conta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tipo",
+              "displayName": "Tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Método",
+              "displayName": "Método",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Categoria",
+              "displayName": "Categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descrição",
+              "displayName": "Descrição",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Valor",
+              "displayName": "Valor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data e Hora",
+              "displayName": "Data e Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Verificada?",
+              "displayName": "Verificada?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        864,
+        304
+      ],
+      "id": "ad89fea6-5694-447e-be3b-a1ee8547964f",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleApi": {
+          "id": "5wrmrHsHSN3UImcp",
+          "name": "Neo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "neo",
+          "mode": "list",
+          "cachedResultName": "neo"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -544,
+        16
+      ],
+      "id": "28c1865c-4290-4839-b7da-5aef9fc6372c",
+      "name": "Clear history",
+      "credentials": {
+        "postgres": {
+          "id": "KSisuOne9RsxI9Ny",
+          "name": "Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a582d5e6-92fa-4411-b9ab-a92d90da58ad",
+              "leftValue": "={{ $json.message.chat.id }}",
+              "rightValue": "6434099865",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "d516b802-8528-4e91-a1b5-0641978223a0",
+              "leftValue": "={{ $json.message.chat.id }}",
+              "rightValue": "836036044",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -544,
+        208
+      ],
+      "id": "1e1455c5-dffe-40b1-8338-cc529f8bd6ef",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -736,
+        16
+      ],
+      "id": "26eb3557-e019-4eef-a1ca-dbfa780af2a4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo[3].file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        288
+      ],
+      "id": "5bcae383-c2c2-49e3-9cee-f700affdfce9",
+      "name": "Get a photo",
+      "webhookId": "89d7828b-d349-40e7-9034-8e8ac738c37a",
+      "credentials": {
+        "telegramApi": {
+          "id": "1bK4mHmLvm7K83Iu",
+          "name": "Neo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "text": "=Analise o conteúdo da imagem e tente encontrar as informações citadas a seguir:\n\n{\n  \"properties\": {\n    \"conta\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Bradesco\",\n        \"Crefisa\",\n        \"Nubank\",\n        \"Santander\",\n        \"Ticket\"\n      ],\n      \"description\": \"A conta utilizada na transação\"\n    },\n    \"tipo\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Entrada\",\n        \"Saída\"\n      ],\n      \"description\": \"O tipo do fluxo financeiro da transação\"\n    },\n    \"metodo\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Crédito\",\n        \"Débito\"\n      ],\n      \"description\": \"Método de pagamento utilizado na transação\"\n    },\n    \"categoria\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Assinaturas\",\n        \"Comida e Bebida\",\n        \"Compras\",\n        \"Contas\",\n        \"Cuidados Pessoais\",\n        \"Decoração\",\n        \"Educação\",\n        \"Entreterimento\",\n        \"Esportes\",\n        \"Impostos\",\n        \"Investimentos\",\n        \"Lazer\",\n        \"Mercado\",\n        \"Moradia\",\n        \"Renda\",\n        \"Saúde\",\n        \"Serviços\",\n        \"Transferências\",\n        \"Transportes\",\n        \"Sem Categoria\"\n      ],\n      \"description\": \"Categoria de classificação da transação\"\n    },\n    \"descricao\": {\n      \"type\": \"string\",\n      \"description\": \"Resumo breve da transação\"\n    },\n    \"valor\": {\n      \"type\": \"number\",\n      \"description\": \"Valor numérico flutuante da transação\"\n    }\n  }\n}\n\nApós a análise, retorne todas as informações encontradas em uma única frase. \nExemplo: \"Gastei 50.00 no Restaurante da Esquina no Crédito usando a conta Nubank, na categoria Comida e Bebida.\"",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        192,
+        288
+      ],
+      "id": "1b3c6201-e762-4dad-9a9c-06e630fc6a7c",
+      "name": "Transcribe a photo",
+      "credentials": {
+        "openAiApi": {
+          "id": "e7iLTxmqwM7mQv6U",
+          "name": "Neo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1f1946c5-cfc1-458e-a081-79b100712c43",
+              "name": "chatInput",
+              "value": "={{ $json['0'].content[0].text }}",
+              "type": "string"
+            },
+            {
+              "id": "25640c18-aadd-43a7-883a-4061c22cd2fc",
+              "name": "sessionId",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        288
+      ],
+      "id": "208e189d-9afe-4b19-af45-6048e5a5d9b1",
+      "name": "Standardized output 3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3428455-8d67-4bc7-bd50-81ad12f0f853",
+              "name": "chatInput",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "5abc6e62-e4a7-488b-bc38-88b2a68b82a8",
+              "name": "sessionId",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        96
+      ],
+      "id": "1190d31a-f354-4bcd-9aa4-9b77c66ba67d",
+      "name": "Standardized output"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1f1946c5-cfc1-458e-a081-79b100712c43",
+              "name": "chatInput",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "25640c18-aadd-43a7-883a-4061c22cd2fc",
+              "name": "sessionId",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        -96
+      ],
+      "id": "263f974e-e30e-49a5-be44-5a991555fcca",
+      "name": "Standardized output 2"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Neo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Get a audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Standardized output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a audio": {
+      "main": [
+        [
+          {
+            "node": "Standardized output 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "ai_memory": [
+        [
+          {
+            "node": "Neo",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Neo": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Neo",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Clear history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a photo": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a photo": {
+      "main": [
+        [
+          {
+            "node": "Standardized output 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standardized output 3": {
+      "main": [
+        [
+          {
+            "node": "Neo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standardized output": {
+      "main": [
+        [
+          {
+            "node": "Neo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standardized output 2": {
+      "main": [
+        [
+          {
+            "node": "Neo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "201d4019418c413f00e6cb40ad343f465452ee63cf8c3a4d19a9d9fec62602b7"
+  }
+}
