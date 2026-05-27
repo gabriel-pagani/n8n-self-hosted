@@ -14,8 +14,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        912,
-        -80
+        1680,
+        -320
       ],
       "id": "97de27e1-afe7-4021-a131-5edfc28472f2",
       "name": "Registra Movimento",
@@ -34,8 +34,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        704,
-        -80
+        1472,
+        -320
       ],
       "id": "77aa0a39-c65c-43cb-9c1b-03923e1ec4ab",
       "name": "Configura Payload"
@@ -47,37 +47,37 @@
             {
               "id": "b901884c-64d9-4bc0-b41e-5fc4d0695b46",
               "name": "Chave de Acesso",
-              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}",
+              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}",
               "type": "string"
             },
             {
               "id": "e2365ef5-6d9b-463f-a4dd-e6fb838bc067",
               "name": "Número",
-              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}",
+              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}",
               "type": "string"
             },
             {
               "id": "583d3f50-9739-483d-93e0-222ddff33b4b",
               "name": "Série",
-              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Serie }}",
+              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Serie }}",
               "type": "string"
             },
             {
               "id": "d0ab4862-b478-4c9c-a1f0-7e8930cdcadf",
               "name": "Prestador",
-              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
+              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
               "type": "string"
             },
             {
               "id": "fd4b8be9-712b-4e6e-b8d9-5718397a27f7",
               "name": "Tomador",
-              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
+              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
               "type": "string"
             },
             {
               "id": "93d7c80a-102c-47a3-9225-deb8c7ce38f7",
               "name": "Valor Base",
-              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.ValoresNfse.BaseCalculo }}",
+              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Servico.Valores.ValorServicos }}",
               "type": "string"
             }
           ]
@@ -87,8 +87,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        80,
-        -80
+        848,
+        -320
       ],
       "id": "04edc06a-7674-4ed6-b0fe-9819329cfb61",
       "name": "Formata Dados"
@@ -140,8 +140,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        496,
-        -80
+        1264,
+        -320
       ],
       "id": "28b4d088-c1f8-403b-90fe-0eb702e5b343",
       "name": "Padroniza Dados"
@@ -149,14 +149,14 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO \n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.Prestador }}') \n\tAND CGCCFO = '{{ $json.Tomador }}'",
+        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.Prestador }}') \n\tAND CGCCFO = '{{ $json.Tomador }}'",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftSql",
       "typeVersion": 1.1,
       "position": [
-        288,
-        -80
+        1056,
+        -320
       ],
       "id": "c593677e-b0a5-4f74-a47c-17266ae5108f",
       "name": "Consulta Empresas",
@@ -180,8 +180,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.3,
       "position": [
-        -336,
-        -80
+        -592,
+        -400
       ],
       "id": "4e2a2d69-fcfe-452f-af63-cd34894d5d0e",
       "name": "Schedule Trigger"
@@ -209,20 +209,144 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"filters\": {\n    \"emitterCnpj\": [\n      \"07150434000117\",\n      \"10954989000126\",\n      \"80700024000192\"\n    ],\n    \"emissionDate\": {\n      \"From\": \"{{ $now.minus({days: 7}).startOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\",\n      \"To\": \"{{ $now.endOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\"\n    }\n  },\n  \"fields\": [\n    \"document\"\n  ],\n  \"paginator\": \"\"\n}",
+        "jsonBody": "={\n  \"filters\": {\n    \"emitterCnpj\": [\n      \"07150434000117\"\n    ],\n    \"emissionDate\": {\n      \"From\": \"{{ $now.minus({days: 7}).startOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\",\n      \"To\": \"{{ $now.endOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\"\n    }\n  },\n  \"fields\": [\n    \"document\"\n  ],\n  \"paginator\": \"\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -128,
-        -80
+        -384,
+        -400
       ],
       "id": "c10a1734-e278-473c-a8cb-47841f3a225d",
       "name": "Consulta XMLs"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        32,
+        -400
+      ],
+      "id": "6d50e087-f97b-474b-8f8f-2d54148b7c5f",
+      "name": "Para Cada XML"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -496
+      ],
+      "id": "7b313333-0a94-41b3-9306-f1b590c23c23",
+      "name": "Fim"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "nfses",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        -400
+      ],
+      "id": "f02cf910-3351-4d49-b3b8-8801fe9f4318",
+      "name": "Separa XMLs"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO ZIMPORTACAOXML (CHAVEACESSO) VALUES ('{{ $('Padroniza Dados').item.json.NFeAccesskey }}')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        1888,
+        -320
+      ],
+      "id": "1da7b315-135e-4110-a34d-e35f655cef37",
+      "name": "Registra Importação",
+      "credentials": {
+        "microsoftSql": {
+          "id": "d5wJRoyLLTIDzOn8",
+          "name": "SQL Server"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n    CASE \n        WHEN EXISTS (SELECT 1 FROM ZIMPORTACAOXML (NOLOCK) WHERE CHAVEACESSO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}') THEN 'Sim' \n        ELSE 'Não'\n    END AS IMPORTADO",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        336,
+        -304
+      ],
+      "id": "acbffae6-9981-4896-8911-f01a05a1e554",
+      "name": "Verifica XML",
+      "credentials": {
+        "microsoftSql": {
+          "id": "d5wJRoyLLTIDzOn8",
+          "name": "SQL Server"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1cbf1ce8-09fa-49e7-9e2e-298d2034153c",
+              "leftValue": "={{ $json.IMPORTADO }}",
+              "rightValue": "Não",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        544,
+        -304
+      ],
+      "id": "0bbe355d-3fe2-4c93-ab74-74c094a464c2",
+      "name": "Se"
     }
   ],
   "connections": {
+    "Registra Movimento": {
+      "main": [
+        [
+          {
+            "node": "Registra Importação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Configura Payload": {
       "main": [
         [
@@ -282,7 +406,76 @@
       "main": [
         [
           {
+            "node": "Separa XMLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Para Cada XML": {
+      "main": [
+        [
+          {
+            "node": "Fim",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Verifica XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separa XMLs": {
+      "main": [
+        [
+          {
+            "node": "Para Cada XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registra Importação": {
+      "main": [
+        [
+          {
+            "node": "Para Cada XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica XML": {
+      "main": [
+        [
+          {
+            "node": "Se",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se": {
+      "main": [
+        [
+          {
             "node": "Formata Dados",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Para Cada XML",
             "type": "main",
             "index": 0
           }
