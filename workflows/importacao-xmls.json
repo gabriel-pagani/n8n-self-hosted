@@ -2,46 +2,6 @@
   "nodes": [
     {
       "parameters": {
-        "url": "https://api.arquivei.com.br/v1/nfse/emitted?cnpj[]=07150434000117",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "limit",
-              "value": "1"
-            },
-            {
-              "name": "format_type",
-              "value": "json"
-            }
-          ]
-        },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "X-API-ID",
-              "value": ""
-            },
-            {
-              "name": "X-API-KEY",
-              "value": ""
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        -128,
-        -80
-      ],
-      "id": "c1844aea-1efb-4e00-91d0-72980d2b153c",
-      "name": "Consulta XMLs"
-    },
-    {
-      "parameters": {
         "method": "POST",
         "url": "http://apptotvs.sinasc.com.br:8051/api/mov/v1/Movements",
         "authentication": "genericCredentialType",
@@ -87,37 +47,37 @@
             {
               "id": "b901884c-64d9-4bc0-b41e-5fc4d0695b46",
               "name": "Chave de Acesso",
-              "value": "={{ $json.data[0].xml.Nfse.InfNfse.CodigoVerificacao }}",
+              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}",
               "type": "string"
             },
             {
               "id": "e2365ef5-6d9b-463f-a4dd-e6fb838bc067",
               "name": "Número",
-              "value": "={{ $json.data[0].xml.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}",
+              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}",
               "type": "string"
             },
             {
               "id": "583d3f50-9739-483d-93e0-222ddff33b4b",
               "name": "Série",
-              "value": "={{ $json.data[0].xml.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Serie }}",
+              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Serie }}",
               "type": "string"
             },
             {
               "id": "d0ab4862-b478-4c9c-a1f0-7e8930cdcadf",
               "name": "Prestador",
-              "value": "={{ $json.data[0].xml.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
+              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
               "type": "string"
             },
             {
               "id": "fd4b8be9-712b-4e6e-b8d9-5718397a27f7",
               "name": "Tomador",
-              "value": "={{ $json.data[0].xml.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Tomador.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
+              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
               "type": "string"
             },
             {
               "id": "93d7c80a-102c-47a3-9225-deb8c7ce38f7",
               "name": "Valor Base",
-              "value": "={{ $json.data[0].xml.Nfse.InfNfse.ValoresNfse.BaseCalculo }}",
+              "value": "={{ $json.nfses[0].jsonDocument.CompNfse.Nfse.InfNfse.ValoresNfse.BaseCalculo }}",
               "type": "string"
             }
           ]
@@ -225,20 +185,44 @@
       ],
       "id": "4e2a2d69-fcfe-452f-af63-cd34894d5d0e",
       "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.arquivei.com.br/v1/dfe/nfse",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-ID",
+              "value": ""
+            },
+            {
+              "name": "X-API-KEY",
+              "value": ""
+            },
+            {
+              "name": "X-Use-ApiGateway",
+              "value": "always"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"filters\": {\n    \"emitterCnpj\": [\n      \"07150434000117\"\n    ],\n    \"emissionDate\": {\n      \"From\": \"{{ $now.minus({days: 7}).startOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\",\n      \"To\": \"{{ $now.endOf('day').toFormat('yyyy-MM-dd HH:mm:ss') }}\"\n    }\n  },\n  \"fields\": [\n    \"document\"\n  ],\n  \"paginator\": \"\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -128,
+        -80
+      ],
+      "id": "c10a1734-e278-473c-a8cb-47841f3a225d",
+      "name": "Consulta XMLs"
     }
   ],
   "connections": {
-    "Consulta XMLs": {
-      "main": [
-        [
-          {
-            "node": "Formata Dados",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Configura Payload": {
       "main": [
         [
@@ -288,6 +272,17 @@
         [
           {
             "node": "Consulta XMLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta XMLs": {
+      "main": [
+        [
+          {
+            "node": "Formata Dados",
             "type": "main",
             "index": 0
           }
