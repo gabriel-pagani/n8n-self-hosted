@@ -8,14 +8,14 @@
         "genericAuthType": "httpBasicAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ $json.body }}",
+        "jsonBody": "={{ $json.body2 }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
         1680,
-        -320
+        -400
       ],
       "id": "97de27e1-afe7-4021-a131-5edfc28472f2",
       "name": "Registra Movimento",
@@ -24,7 +24,8 @@
           "id": "g4QYsmIRsSE8hGsr",
           "name": "Consulta XML"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -35,7 +36,7 @@
       "typeVersion": 2,
       "position": [
         1472,
-        -320
+        -400
       ],
       "id": "77aa0a39-c65c-43cb-9c1b-03923e1ec4ab",
       "name": "Configura Payload"
@@ -88,7 +89,7 @@
       "typeVersion": 3.4,
       "position": [
         848,
-        -320
+        -400
       ],
       "id": "04edc06a-7674-4ed6-b0fe-9819329cfb61",
       "name": "Formata Dados"
@@ -141,7 +142,7 @@
       "typeVersion": 3.4,
       "position": [
         1264,
-        -320
+        -400
       ],
       "id": "28b4d088-c1f8-403b-90fe-0eb702e5b343",
       "name": "Padroniza Dados"
@@ -156,7 +157,7 @@
       "typeVersion": 1.1,
       "position": [
         1056,
-        -320
+        -400
       ],
       "id": "c593677e-b0a5-4f74-a47c-17266ae5108f",
       "name": "Consulta Empresas",
@@ -240,7 +241,7 @@
       "typeVersion": 1,
       "position": [
         336,
-        -496
+        -512
       ],
       "id": "7b313333-0a94-41b3-9306-f1b590c23c23",
       "name": "Fim"
@@ -268,8 +269,8 @@
       "type": "n8n-nodes-base.microsoftSql",
       "typeVersion": 1.1,
       "position": [
-        1888,
-        -320
+        1984,
+        -512
       ],
       "id": "1da7b315-135e-4110-a34d-e35f655cef37",
       "name": "Registra Importação",
@@ -290,7 +291,7 @@
       "typeVersion": 1.1,
       "position": [
         336,
-        -304
+        -288
       ],
       "id": "acbffae6-9981-4896-8911-f01a05a1e554",
       "name": "Verifica XML",
@@ -329,7 +330,7 @@
       "typeVersion": 2.3,
       "position": [
         544,
-        -304
+        -288
       ],
       "id": "0bbe355d-3fe2-4c93-ab74-74c094a464c2",
       "name": "Se"
@@ -341,6 +342,13 @@
         [
           {
             "node": "Registra Importação",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Para Cada XML",
             "type": "main",
             "index": 0
           }
