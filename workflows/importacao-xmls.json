@@ -248,7 +248,7 @@
       "credentials": {
         "httpBasicAuth": {
           "id": "g4QYsmIRsSE8hGsr",
-          "name": "Usuário RM"
+          "name": "RM User"
         }
       },
       "onError": "continueErrorOutput"
