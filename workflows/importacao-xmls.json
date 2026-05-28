@@ -251,7 +251,6 @@
           "name": "Consulta XML"
         }
       },
-      "disabled": true,
       "onError": "continueErrorOutput"
     },
     {
