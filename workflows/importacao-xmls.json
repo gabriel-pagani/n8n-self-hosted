@@ -355,9 +355,7 @@
         "toEmail": "tecnologia@gruposmi.com.br",
         "subject": "=Erro ao importar nota de serviço",
         "text": "=Erro ao importar o XML {{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}\n\nMensagem do erro:\n{{ $json.error.message }}\n",
-        "options": {
-          "ccEmail": "gabriel.souza@gruposmi.com.br"
-        }
+        "options": {}
       },
       "id": "32da3c36-c09e-4340-8047-6bff001007b0",
       "name": "Envia um email de aviso",
