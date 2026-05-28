@@ -1,191 +1,48 @@
 {
   "nodes": [
     {
-      "parameters": {
-        "method": "POST",
-        "url": "http://apptotvs.sinasc.com.br:8051/api/mov/v1/Movements",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpBasicAuth",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ $json.body2 }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
       "position": [
-        1680,
-        -400
+        336,
+        -512
       ],
-      "id": "97de27e1-afe7-4021-a131-5edfc28472f2",
-      "name": "Registra Movimento",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "g4QYsmIRsSE8hGsr",
-          "name": "Consulta XML"
-        }
-      },
-      "onError": "continueErrorOutput"
+      "id": "7b313333-0a94-41b3-9306-f1b590c23c23",
+      "name": "Fim"
     },
     {
       "parameters": {
-        "language": "pythonNative",
-        "pythonCode": "companyId = str(_items[0][\"json\"][\"companyId\"])\nNFeAccesskey = str(_items[0][\"json\"][\"NFeAccesskey\"])\nnumber = str(_items[0][\"json\"][\"number\"])\nseries = str(_items[0][\"json\"][\"series\"])\ncustomerVendorCode = str(_items[0][\"json\"][\"customerVendorCode\"])\nunitPrice = float(_items[0][\"json\"][\"unitPrice\"])\n\npayload = {\n    \"aplicationIntegration\": \"T\",\n    \"internalId\": f\"{companyId}|99999999\",\n    \"companyId\": companyId,\n    \"movementId\": 99999999,\n    \"branchId\": 1,\n    \"movementTypeCode\": \"2.2.04\",  \n    \"NFeAccesskey\": NFeAccesskey,\n    \"number\": number.zfill(9),\n    \"series\": series,\n    \"type\": \"S\",\n    \"documentTypeCode\": \"NFSE\",\n    \"customerVendorCompanyId\": companyId,\n    \"customerVendorCode\": customerVendorCode,\n    \"paymentTermCode\": \"AV\",\n    \"observation\": \"Movimentação Importada Via API\",\n    \"movementItems\": [\n        {\n            \"aplicationIntegration\": \"T\",    \n            \"companyId\": companyId,\n            \"branchId\": 1,    \n            \"movementId\": 99999999,\n            \"warehouseCode\": \"01.001\",\n            \"sequentialId\": 1,\n            \"sequentialNumber\": 1,\n            \"productId\": 138918 if companyId == \"1\" else (138898 if companyId == \"5\" else (138917 if companyId == \"6\" else None)),\n            \"quantity\": 1.0,\n            \"unitPrice\": unitPrice\n        }\n    ],\n    \"transportData\": [\n        {\n        \"companyId\": 5,\n        \"movementId\": 99999999\n        }\n    ],\n    \"complementaryFields\": {\n        \"abatret\": \"0\"\n    }\n}\n\nreturn [{\"json\": {\"body\": payload}}]"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1472,
-        -400
-      ],
-      "id": "77aa0a39-c65c-43cb-9c1b-03923e1ec4ab",
-      "name": "Configura Payload"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
             {
-              "id": "b901884c-64d9-4bc0-b41e-5fc4d0695b46",
-              "name": "Chave de Acesso",
-              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}",
-              "type": "string"
-            },
-            {
-              "id": "e2365ef5-6d9b-463f-a4dd-e6fb838bc067",
-              "name": "Número",
-              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}",
-              "type": "string"
-            },
-            {
-              "id": "583d3f50-9739-483d-93e0-222ddff33b4b",
-              "name": "Série",
-              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Serie }}",
-              "type": "string"
-            },
-            {
-              "id": "d0ab4862-b478-4c9c-a1f0-7e8930cdcadf",
-              "name": "Prestador",
-              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
-              "type": "string"
-            },
-            {
-              "id": "fd4b8be9-712b-4e6e-b8d9-5718397a27f7",
-              "name": "Tomador",
-              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
-              "type": "string"
-            },
-            {
-              "id": "93d7c80a-102c-47a3-9225-deb8c7ce38f7",
-              "name": "Valor Base",
-              "value": "={{ $('Para Cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Servico.Valores.ValorServicos }}",
-              "type": "string"
+              "id": "1cbf1ce8-09fa-49e7-9e2e-298d2034153c",
+              "leftValue": "={{ $json.Importado }}",
+              "rightValue": "Não",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
-          ]
+          ],
+          "combinator": "and"
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
       "position": [
-        848,
-        -400
+        544,
+        -288
       ],
-      "id": "04edc06a-7674-4ed6-b0fe-9819329cfb61",
-      "name": "Formata Dados"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "17eac68c-2fc3-4787-8170-3d8f8b8eb64e",
-              "name": "companyId",
-              "value": "={{ $json.companyId }}",
-              "type": "number"
-            },
-            {
-              "id": "63cd8328-a359-4b0a-8c3f-da29cea37650",
-              "name": "NFeAccesskey",
-              "value": "={{ $('Formata Dados').item.json['Chave de Acesso'] }}",
-              "type": "string"
-            },
-            {
-              "id": "8eb08e98-88f3-4509-accc-f00290cab4ab",
-              "name": "number",
-              "value": "={{ $('Formata Dados').item.json['Número'] }}",
-              "type": "string"
-            },
-            {
-              "id": "477c41c8-effa-4cba-8aba-def4c8897d44",
-              "name": "series",
-              "value": "={{ $('Formata Dados').item.json['Série'] }}",
-              "type": "string"
-            },
-            {
-              "id": "c5c061c0-25f1-486d-89f1-de163218e8d4",
-              "name": "customerVendorCode",
-              "value": "={{ $json.customerVendorCode }}",
-              "type": "string"
-            },
-            {
-              "id": "356d0393-8b55-4298-951e-102edc39d7c3",
-              "name": "unitPrice",
-              "value": "={{ $('Formata Dados').item.json['Valor Base'] }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        1264,
-        -400
-      ],
-      "id": "28b4d088-c1f8-403b-90fe-0eb702e5b343",
-      "name": "Padroniza Dados"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.Prestador }}') \n\tAND CGCCFO = '{{ $json.Tomador }}'",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.microsoftSql",
-      "typeVersion": 1.1,
-      "position": [
-        1056,
-        -400
-      ],
-      "id": "c593677e-b0a5-4f74-a47c-17266ae5108f",
-      "name": "Consulta Empresas",
-      "credentials": {
-        "microsoftSql": {
-          "id": "d5wJRoyLLTIDzOn8",
-          "name": "SQL Server"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "minutes"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.3,
-      "position": [
-        -592,
-        -400
-      ],
-      "id": "4e2a2d69-fcfe-452f-af63-cd34894d5d0e",
-      "name": "Schedule Trigger"
+      "id": "0bbe355d-3fe2-4c93-ab74-74c094a464c2",
+      "name": "Se"
     },
     {
       "parameters": {
@@ -220,31 +77,7 @@
         -400
       ],
       "id": "c10a1734-e278-473c-a8cb-47841f3a225d",
-      "name": "Consulta XMLs"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
-      "position": [
-        32,
-        -400
-      ],
-      "id": "6d50e087-f97b-474b-8f8f-2d54148b7c5f",
-      "name": "Para Cada XML"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        336,
-        -512
-      ],
-      "id": "7b313333-0a94-41b3-9306-f1b590c23c23",
-      "name": "Fim"
+      "name": "Busca as XMLs"
     },
     {
       "parameters": {
@@ -258,12 +91,173 @@
         -400
       ],
       "id": "f02cf910-3351-4d49-b3b8-8801fe9f4318",
-      "name": "Separa XMLs"
+      "name": "Organiza as XMLs"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        32,
+        -400
+      ],
+      "id": "6d50e087-f97b-474b-8f8f-2d54148b7c5f",
+      "name": "Para cada XML"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b901884c-64d9-4bc0-b41e-5fc4d0695b46",
+              "name": "Chave de Acesso",
+              "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}",
+              "type": "string"
+            },
+            {
+              "id": "e2365ef5-6d9b-463f-a4dd-e6fb838bc067",
+              "name": "Número",
+              "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}",
+              "type": "string"
+            },
+            {
+              "id": "583d3f50-9739-483d-93e0-222ddff33b4b",
+              "name": "Série",
+              "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Serie }}",
+              "type": "string"
+            },
+            {
+              "id": "d0ab4862-b478-4c9c-a1f0-7e8930cdcadf",
+              "name": "Prestador",
+              "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
+              "type": "string"
+            },
+            {
+              "id": "fd4b8be9-712b-4e6e-b8d9-5718397a27f7",
+              "name": "Tomador",
+              "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
+              "type": "string"
+            },
+            {
+              "id": "93d7c80a-102c-47a3-9225-deb8c7ce38f7",
+              "name": "Valor Base",
+              "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Servico.Valores.ValorServicos }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        848,
+        -400
+      ],
+      "id": "04edc06a-7674-4ed6-b0fe-9819329cfb61",
+      "name": "Formata os dados"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "17eac68c-2fc3-4787-8170-3d8f8b8eb64e",
+              "name": "companyId",
+              "value": "={{ $json.companyId }}",
+              "type": "number"
+            },
+            {
+              "id": "63cd8328-a359-4b0a-8c3f-da29cea37650",
+              "name": "NFeAccesskey",
+              "value": "={{ $('Formata os dados').item.json['Chave de Acesso'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8eb08e98-88f3-4509-accc-f00290cab4ab",
+              "name": "number",
+              "value": "={{ $('Formata os dados').item.json['Número'] }}",
+              "type": "string"
+            },
+            {
+              "id": "477c41c8-effa-4cba-8aba-def4c8897d44",
+              "name": "series",
+              "value": "={{ $('Formata os dados').item.json['Série'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c5c061c0-25f1-486d-89f1-de163218e8d4",
+              "name": "customerVendorCode",
+              "value": "={{ $json.customerVendorCode }}",
+              "type": "string"
+            },
+            {
+              "id": "356d0393-8b55-4298-951e-102edc39d7c3",
+              "name": "unitPrice",
+              "value": "={{ $('Formata os dados').item.json['Valor Base'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        -400
+      ],
+      "id": "28b4d088-c1f8-403b-90fe-0eb702e5b343",
+      "name": "Padroniza os dados"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "companyId = str(_items[0][\"json\"][\"companyId\"])\nNFeAccesskey = str(_items[0][\"json\"][\"NFeAccesskey\"])\nnumber = str(_items[0][\"json\"][\"number\"])\nseries = str(_items[0][\"json\"][\"series\"])\ncustomerVendorCode = str(_items[0][\"json\"][\"customerVendorCode\"])\nunitPrice = float(_items[0][\"json\"][\"unitPrice\"])\n\npayload = {\n    \"aplicationIntegration\": \"T\",\n    \"internalId\": f\"{companyId}|99999999\",\n    \"companyId\": companyId,\n    \"movementId\": 99999999,\n    \"branchId\": 1,\n    \"movementTypeCode\": \"2.2.04\",  \n    \"NFeAccesskey\": NFeAccesskey,\n    \"number\": number.zfill(9),\n    \"series\": series,\n    \"type\": \"S\",\n    \"documentTypeCode\": \"NFSE\",\n    \"customerVendorCompanyId\": companyId,\n    \"customerVendorCode\": customerVendorCode,\n    \"paymentTermCode\": \"AV\",\n    \"observation\": \"Movimentação Importada Via API\",\n    \"movementItems\": [\n        {\n            \"aplicationIntegration\": \"T\",    \n            \"companyId\": companyId,\n            \"branchId\": 1,    \n            \"movementId\": 99999999,\n            \"warehouseCode\": \"01.001\",\n            \"sequentialId\": 1,\n            \"sequentialNumber\": 1,\n            \"productId\": 138918 if companyId == \"1\" else (138898 if companyId == \"5\" else (138917 if companyId == \"6\" else None)),\n            \"quantity\": 1.0,\n            \"unitPrice\": unitPrice\n        }\n    ],\n    \"transportData\": [\n        {\n        \"companyId\": 5,\n        \"movementId\": 99999999\n        }\n    ],\n    \"complementaryFields\": {\n        \"abatret\": \"0\"\n    }\n}\n\nreturn [{\"json\": {\"body\": payload}}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        -400
+      ],
+      "id": "77aa0a39-c65c-43cb-9c1b-03923e1ec4ab",
+      "name": "Preenche o payload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://apptotvs.sinasc.com.br:8051/api/mov/v1/Movements",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1680,
+        -400
+      ],
+      "id": "97de27e1-afe7-4021-a131-5edfc28472f2",
+      "name": "Registra o movimento",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "g4QYsmIRsSE8hGsr",
+          "name": "Consulta XML"
+        }
+      },
+      "disabled": true,
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "INSERT INTO ZIMPORTACAOXML (CHAVEACESSO) VALUES ('{{ $('Padroniza Dados').item.json.NFeAccesskey }}')",
+        "query": "INSERT INTO ZIMPORTACAOXML (CHAVEACESSO) VALUES ('{{ $('Padroniza os dados').item.json.NFeAccesskey }}')",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftSql",
@@ -273,7 +267,7 @@
         -512
       ],
       "id": "1da7b315-135e-4110-a34d-e35f655cef37",
-      "name": "Registra Importação",
+      "name": "Registra a importação",
       "credentials": {
         "microsoftSql": {
           "id": "d5wJRoyLLTIDzOn8",
@@ -284,17 +278,18 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n    CASE \n        WHEN EXISTS (SELECT 1 FROM ZIMPORTACAOXML (NOLOCK) WHERE CHAVEACESSO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}') THEN 'Sim' \n        ELSE 'Não'\n    END AS IMPORTADO",
+        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.Prestador }}') \n\tAND CGCCFO = '{{ $json.Tomador }}'",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftSql",
       "typeVersion": 1.1,
       "position": [
-        336,
-        -288
+        1056,
+        -400
       ],
-      "id": "acbffae6-9981-4896-8911-f01a05a1e554",
-      "name": "Verifica XML",
+      "id": "c593677e-b0a5-4f74-a47c-17266ae5108f",
+      "name": "Consulta as informações das empresas",
+      "alwaysOutputData": true,
       "credentials": {
         "microsoftSql": {
           "id": "d5wJRoyLLTIDzOn8",
@@ -304,124 +299,87 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
+        "rule": {
+          "interval": [
             {
-              "id": "1cbf1ce8-09fa-49e7-9e2e-298d2034153c",
-              "leftValue": "={{ $json.IMPORTADO }}",
-              "rightValue": "Não",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
+              "field": "minutes"
             }
-          ],
-          "combinator": "and"
-        },
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -592,
+        -400
+      ],
+      "id": "4e2a2d69-fcfe-452f-af63-cd34894d5d0e",
+      "name": "Cronômetro"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n    CASE \n        WHEN EXISTS (SELECT 1 FROM ZIMPORTACAOXML (NOLOCK) WHERE CHAVEACESSO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}') THEN 'Sim' \n        ELSE 'Não'\n    END AS Importado",
         "options": {}
       },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
       "position": [
-        544,
+        336,
         -288
       ],
-      "id": "0bbe355d-3fe2-4c93-ab74-74c094a464c2",
-      "name": "Se"
+      "id": "acbffae6-9981-4896-8911-f01a05a1e554",
+      "name": "Consulta se já foi importado",
+      "credentials": {
+        "microsoftSql": {
+          "id": "d5wJRoyLLTIDzOn8",
+          "name": "SQL Server"
+        }
+      }
     }
   ],
   "connections": {
-    "Registra Movimento": {
+    "Se": {
       "main": [
         [
           {
-            "node": "Registra Importação",
+            "node": "Formata os dados",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Para Cada XML",
+            "node": "Para cada XML",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Configura Payload": {
+    "Busca as XMLs": {
       "main": [
         [
           {
-            "node": "Registra Movimento",
+            "node": "Organiza as XMLs",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Formata Dados": {
+    "Organiza as XMLs": {
       "main": [
         [
           {
-            "node": "Consulta Empresas",
+            "node": "Para cada XML",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Padroniza Dados": {
-      "main": [
-        [
-          {
-            "node": "Configura Payload",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Consulta Empresas": {
-      "main": [
-        [
-          {
-            "node": "Padroniza Dados",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Schedule Trigger": {
-      "main": [
-        [
-          {
-            "node": "Consulta XMLs",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Consulta XMLs": {
-      "main": [
-        [
-          {
-            "node": "Separa XMLs",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Para Cada XML": {
+    "Para cada XML": {
       "main": [
         [
           {
@@ -432,58 +390,102 @@
         ],
         [
           {
-            "node": "Verifica XML",
+            "node": "Consulta se já foi importado",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Separa XMLs": {
+    "Formata os dados": {
       "main": [
         [
           {
-            "node": "Para Cada XML",
+            "node": "Consulta as informações das empresas",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Registra Importação": {
+    "Padroniza os dados": {
       "main": [
         [
           {
-            "node": "Para Cada XML",
+            "node": "Preenche o payload",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Verifica XML": {
+    "Preenche o payload": {
       "main": [
         [
           {
-            "node": "Se",
+            "node": "Registra o movimento",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Se": {
+    "Registra o movimento": {
       "main": [
         [
           {
-            "node": "Formata Dados",
+            "node": "Registra a importação",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Para Cada XML",
+            "node": "Para cada XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registra a importação": {
+      "main": [
+        [
+          {
+            "node": "Para cada XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta as informações das empresas": {
+      "main": [
+        [
+          {
+            "node": "Padroniza os dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cronômetro": {
+      "main": [
+        [
+          {
+            "node": "Busca as XMLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta se já foi importado": {
+      "main": [
+        [
+          {
+            "node": "Se",
             "type": "main",
             "index": 0
           }
