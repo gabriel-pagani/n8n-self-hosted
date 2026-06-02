@@ -5,7 +5,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        336,
+        320,
         -512
       ],
       "id": "7b313333-0a94-41b3-9306-f1b590c23c23",
@@ -38,7 +38,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        544,
+        736,
         -288
       ],
       "id": "0bbe355d-3fe2-4c93-ab74-74c094a464c2",
@@ -111,44 +111,44 @@
         "assignments": {
           "assignments": [
             {
-              "id": "b901884c-64d9-4bc0-b41e-5fc4d0695b46",
-              "name": "Chave de Acesso",
+              "id": "17eac68c-2fc3-4787-8170-3d8f8b8eb64e",
+              "name": "companyId",
+              "value": "={{ $('Consulta as informações das empresas').item.json.companyId }}",
+              "type": "number"
+            },
+            {
+              "id": "63cd8328-a359-4b0a-8c3f-da29cea37650",
+              "name": "NFeAccesskey",
               "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}",
               "type": "string"
             },
             {
-              "id": "e2365ef5-6d9b-463f-a4dd-e6fb838bc067",
-              "name": "Número",
+              "id": "8eb08e98-88f3-4509-accc-f00290cab4ab",
+              "name": "number",
               "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}",
               "type": "string"
             },
             {
-              "id": "583d3f50-9739-483d-93e0-222ddff33b4b",
-              "name": "Série",
+              "id": "477c41c8-effa-4cba-8aba-def4c8897d44",
+              "name": "series",
               "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Serie }}",
               "type": "string"
             },
             {
-              "id": "0050dbcb-9d09-4d29-92a5-82f5d750e224",
-              "name": "Data de Emissão",
+              "id": "7cd7cdef-9335-40e4-8002-5e5aae0a2610",
+              "name": "RegisterDate",
               "value": "={{ new Date($('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DataEmissao).toISOString() }}",
               "type": "string"
             },
             {
-              "id": "d0ab4862-b478-4c9c-a1f0-7e8930cdcadf",
-              "name": "Prestador",
-              "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
+              "id": "c5c061c0-25f1-486d-89f1-de163218e8d4",
+              "name": "customerVendorCode",
+              "value": "={{ $('Consulta as informações das empresas').item.json.customerVendorCode }}",
               "type": "string"
             },
             {
-              "id": "fd4b8be9-712b-4e6e-b8d9-5718397a27f7",
-              "name": "Tomador",
-              "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}",
-              "type": "string"
-            },
-            {
-              "id": "93d7c80a-102c-47a3-9225-deb8c7ce38f7",
-              "name": "Valor Base",
+              "id": "356d0393-8b55-4298-951e-102edc39d7c3",
+              "name": "unitPrice",
               "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Servico.Valores.ValorServicos }}",
               "type": "string"
             }
@@ -159,66 +159,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        848,
-        -400
-      ],
-      "id": "04edc06a-7674-4ed6-b0fe-9819329cfb61",
-      "name": "Formata os dados"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "17eac68c-2fc3-4787-8170-3d8f8b8eb64e",
-              "name": "companyId",
-              "value": "={{ $json.companyId }}",
-              "type": "number"
-            },
-            {
-              "id": "63cd8328-a359-4b0a-8c3f-da29cea37650",
-              "name": "NFeAccesskey",
-              "value": "={{ $('Formata os dados').item.json['Chave de Acesso'] }}",
-              "type": "string"
-            },
-            {
-              "id": "8eb08e98-88f3-4509-accc-f00290cab4ab",
-              "name": "number",
-              "value": "={{ $('Formata os dados').item.json['Número'] }}",
-              "type": "string"
-            },
-            {
-              "id": "477c41c8-effa-4cba-8aba-def4c8897d44",
-              "name": "series",
-              "value": "={{ $('Formata os dados').item.json['Série'] }}",
-              "type": "string"
-            },
-            {
-              "id": "7cd7cdef-9335-40e4-8002-5e5aae0a2610",
-              "name": "RegisterDate",
-              "value": "={{ $('Formata os dados').item.json['Data de Emissão'] }}",
-              "type": "string"
-            },
-            {
-              "id": "c5c061c0-25f1-486d-89f1-de163218e8d4",
-              "name": "customerVendorCode",
-              "value": "={{ $json.customerVendorCode }}",
-              "type": "string"
-            },
-            {
-              "id": "356d0393-8b55-4298-951e-102edc39d7c3",
-              "name": "unitPrice",
-              "value": "={{ $('Formata os dados').item.json['Valor Base'] }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        1264,
+        1040,
         -400
       ],
       "id": "28b4d088-c1f8-403b-90fe-0eb702e5b343",
@@ -232,7 +173,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1472,
+        1248,
         -400
       ],
       "id": "77aa0a39-c65c-43cb-9c1b-03923e1ec4ab",
@@ -252,7 +193,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1680,
+        1456,
         -400
       ],
       "id": "97de27e1-afe7-4021-a131-5edfc28472f2",
@@ -264,49 +205,6 @@
         }
       },
       "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "INSERT INTO ZIMPORTACAOXML (CHAVEACESSO) VALUES ('{{ $('Padroniza os dados').item.json.NFeAccesskey }}')",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.microsoftSql",
-      "typeVersion": 1.1,
-      "position": [
-        1984,
-        -512
-      ],
-      "id": "1da7b315-135e-4110-a34d-e35f655cef37",
-      "name": "Registra a importação",
-      "credentials": {
-        "microsoftSql": {
-          "id": "d5wJRoyLLTIDzOn8",
-          "name": "SQL Server"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.Prestador }}') \n\tAND CGCCFO = '{{ $json.Tomador }}'",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.microsoftSql",
-      "typeVersion": 1.1,
-      "position": [
-        1056,
-        -400
-      ],
-      "id": "c593677e-b0a5-4f74-a47c-17266ae5108f",
-      "name": "Consulta as informações das empresas",
-      "alwaysOutputData": true,
-      "credentials": {
-        "microsoftSql": {
-          "id": "d5wJRoyLLTIDzOn8",
-          "name": "SQL Server"
-        }
-      }
     },
     {
       "parameters": {
@@ -331,13 +229,13 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n    CASE \n        WHEN EXISTS (SELECT 1 FROM ZIMPORTACAOXML (NOLOCK) WHERE CHAVEACESSO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}') THEN 'Sim' \n        ELSE 'Não'\n    END AS Importado",
+        "query": "SELECT \n    CASE \n        WHEN EXISTS (SELECT 1 FROM TMOV WHERE CODCOLIGADA = '{{ $json.companyId }}' AND CODTMV = '2.2.04' AND SERIE = 'NFSE' AND NUMEROMOV = '{{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}') THEN 'Sim' \n        ELSE 'Não'\n    END AS Importado",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftSql",
       "typeVersion": 1.1,
       "position": [
-        336,
+        528,
         -288
       ],
       "id": "acbffae6-9981-4896-8911-f01a05a1e554",
@@ -362,7 +260,7 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
       "position": [
-        1984,
+        1760,
         -288
       ],
       "webhookId": "3dd69088-e853-41b2-9799-9fc097cf1757",
@@ -372,6 +270,28 @@
           "name": "SMTP"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}') \n\tAND CGCCFO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        -288
+      ],
+      "id": "e9e4bcfa-0b3e-4494-baab-9185585af958",
+      "name": "Consulta as informações das empresas",
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftSql": {
+          "id": "d5wJRoyLLTIDzOn8",
+          "name": "SQL Server"
+        }
+      }
     }
   ],
   "connections": {
@@ -379,7 +299,7 @@
       "main": [
         [
           {
-            "node": "Formata os dados",
+            "node": "Padroniza os dados",
             "type": "main",
             "index": 0
           }
@@ -426,17 +346,6 @@
         ],
         [
           {
-            "node": "Consulta se já foi importado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Formata os dados": {
-      "main": [
-        [
-          {
             "node": "Consulta as informações das empresas",
             "type": "main",
             "index": 0
@@ -470,7 +379,7 @@
       "main": [
         [
           {
-            "node": "Registra a importação",
+            "node": "Para cada XML",
             "type": "main",
             "index": 0
           }
@@ -478,28 +387,6 @@
         [
           {
             "node": "Envia um email de aviso",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Registra a importação": {
-      "main": [
-        [
-          {
-            "node": "Para cada XML",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Consulta as informações das empresas": {
-      "main": [
-        [
-          {
-            "node": "Padroniza os dados",
             "type": "main",
             "index": 0
           }
@@ -533,6 +420,17 @@
         [
           {
             "node": "Para cada XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta as informações das empresas": {
+      "main": [
+        [
+          {
+            "node": "Consulta se já foi importado",
             "type": "main",
             "index": 0
           }
