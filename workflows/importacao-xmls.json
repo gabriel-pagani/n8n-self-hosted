@@ -258,6 +258,7 @@
       ],
       "id": "acbffae6-9981-4896-8911-f01a05a1e554",
       "name": "Consulta se já foi importado",
+      "alwaysOutputData": false,
       "credentials": {
         "microsoftSql": {
           "id": "d5wJRoyLLTIDzOn8",
@@ -271,7 +272,7 @@
         "toEmail": "tecnologia@gruposmi.com.br",
         "subject": "=Erro ao importar nota de serviço",
         "emailFormat": "html",
-        "html": "=<p>Erro ao importar o XML {{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}</p>\n\n<p>Dados do Erro:</p>\n<pre style=\"background-color: #1e1e1e; color: #75be00; padding: 15px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.5; overflow-x: auto;\"><code>{{ (() => { \n  try { \n    const clean = $json.error.message.replace(/^\\d{3} - /, ''); \n    return JSON.stringify(JSON.parse(JSON.parse(clean)), null, 2); \n  } catch (e) { \n    return $json.error.message; \n  } \n})() }}</code></pre>",
+        "html": "=<p>Erro ao importar a nota {{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}</p>\n\n<p>Dados do Erro:</p>\n<pre style=\"background-color: #1e1e1e; color: #75be00; padding: 15px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.5; overflow-x: auto;\"><code>{{ (() => { \n  try { \n    const clean = $json.error.message.replace(/^\\d{3} - /, ''); \n    return JSON.stringify(JSON.parse(JSON.parse(clean)), null, 2); \n  } catch (e) { \n    return $json.error.message; \n  } \n})() }}</code></pre>",
         "options": {}
       },
       "id": "32da3c36-c09e-4340-8047-6bff001007b0",
@@ -293,7 +294,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode,\n\tCASE\n\t\tWHEN CODCOLIGADA IN (1, 5) THEN '2.2.04'\n\t\tWHEN CODCOLIGADA IN (7, 8) THEN '2.2.05'\n\t\tELSE NULL\n\tEND AS movementTypeCode,\n\tCASE\n\t\tWHEN CODCOLIGADA = 1 THEN 1395\n\t\tWHEN CODCOLIGADA = 5 THEN 409\n\t\tWHEN CODCOLIGADA = 7 THEN 1802\n\t\tWHEN CODCOLIGADA = 8 THEN 444\n\t\tELSE NULL\n\tEND AS FiscalNatureId,\n\tCASE\n\t\tWHEN CODCOLIGADA = 1 THEN 138918\n\t\tWHEN CODCOLIGADA = 5 THEN 138898\n\t\tWHEN CODCOLIGADA = 7 THEN 88774\n\t\tWHEN CODCOLIGADA = 8 THEN 104410\n\t\tELSE NULL\n\tEND AS productId\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}') \n\tAND CGCCFO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') || $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cpf?.replace(/^(\\d{3})(\\d{3})(\\d{3})(\\d{2})/, '$1.$2.$3-$4') }}'",
+        "query": "SELECT \n\tGCOLIGADA.CODCOLIGADA AS companyId, \n\tFCFO.CODCFO AS customerVendorCode,\n\tCASE\n\t\tWHEN GCOLIGADA.CODCOLIGADA IN (1, 5) THEN '2.2.04'\n\t\tWHEN GCOLIGADA.CODCOLIGADA IN (7, 8) THEN '2.2.05'\n\t\tELSE NULL\n\tEND AS movementTypeCode,\n\tCASE\n\t\tWHEN GCOLIGADA.CODCOLIGADA = 1 THEN 1395\n\t\tWHEN GCOLIGADA.CODCOLIGADA = 5 THEN 409\n\t\tWHEN GCOLIGADA.CODCOLIGADA = 7 THEN 1802\n\t\tWHEN GCOLIGADA.CODCOLIGADA = 8 THEN 444\n\t\tELSE NULL\n\tEND AS FiscalNatureId,\n\tCASE\n\t\tWHEN GCOLIGADA.CODCOLIGADA = 1 THEN 138918\n\t\tWHEN GCOLIGADA.CODCOLIGADA = 5 THEN 138898\n\t\tWHEN GCOLIGADA.CODCOLIGADA = 7 THEN 88774\n\t\tWHEN GCOLIGADA.CODCOLIGADA = 8 THEN 104410\n\t\tELSE NULL\n\tEND AS productId\n\nFROM GCOLIGADA (NOLOCK)\n\tLEFT JOIN FCFO (NOLOCK) ON (\n\t\tFCFO.CODCOLIGADA = GCOLIGADA.CODCOLIGADA AND\n\t\tFCFO.CGCCFO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') || $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cpf?.replace(/^(\\d{3})(\\d{3})(\\d{3})(\\d{2})/, '$1.$2.$3-$4') }}'\n\t)\n\nWHERE 1=1\n\tAND GCOLIGADA.CGC = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}'\n",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftSql",
@@ -304,7 +305,7 @@
       ],
       "id": "e9e4bcfa-0b3e-4494-baab-9185585af958",
       "name": "Consulta as informações das empresas",
-      "alwaysOutputData": true,
+      "alwaysOutputData": false,
       "credentials": {
         "microsoftSql": {
           "id": "d5wJRoyLLTIDzOn8",
