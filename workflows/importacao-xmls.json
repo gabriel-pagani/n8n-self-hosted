@@ -117,6 +117,18 @@
               "type": "number"
             },
             {
+              "id": "5029a517-e34b-428c-a330-4fb6ce109d8c",
+              "name": "movementTypeCode",
+              "value": "={{ $('Consulta as informações das empresas').item.json.movementTypeCode }}",
+              "type": "string"
+            },
+            {
+              "id": "d853f70a-0439-4728-8e79-a8baf68779ec",
+              "name": "FiscalNatureId",
+              "value": "={{ $('Consulta as informações das empresas').item.json.FiscalNatureId }}",
+              "type": "number"
+            },
+            {
               "id": "63cd8328-a359-4b0a-8c3f-da29cea37650",
               "name": "NFeAccesskey",
               "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}",
@@ -147,6 +159,12 @@
               "type": "string"
             },
             {
+              "id": "4733edeb-911d-4881-a0c8-f4637981ad86",
+              "name": "productId",
+              "value": "={{ $('Consulta as informações das empresas').item.json.productId }}",
+              "type": "number"
+            },
+            {
               "id": "356d0393-8b55-4298-951e-102edc39d7c3",
               "name": "unitPrice",
               "value": "={{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Servico.Valores.ValorServicos }}",
@@ -168,7 +186,7 @@
     {
       "parameters": {
         "language": "pythonNative",
-        "pythonCode": "companyId = str(_items[0][\"json\"][\"companyId\"])\nNFeAccesskey = str(_items[0][\"json\"][\"NFeAccesskey\"])\nnumber = str(_items[0][\"json\"][\"number\"])\nseries = str(_items[0][\"json\"][\"series\"])\nRegisterDate = str(_items[0][\"json\"][\"RegisterDate\"])\ncustomerVendorCode = str(_items[0][\"json\"][\"customerVendorCode\"])\nunitPrice = float(_items[0][\"json\"][\"unitPrice\"])\n\npayload = {\n    \"aplicationIntegration\": \"T\",\n    \"internalId\": f\"{companyId}|99999999\",\n    \"companyId\": companyId,\n    \"movementId\": 99999999,\n    \"branchId\": 1,\n    \"movementTypeCode\": \"2.2.04\" if companyId in [\"1\", \"5\"] else (\"2.2.05\" if companyId in [\"7\", \"8\"] else None),\n    \"NFeAccesskey\": NFeAccesskey,\n    \"number\": number,\n    \"series\": \"NFSE\",\n    \"type\": \"S\",\n    \"documentTypeCode\": \"NFSE\",\n    \"customerVendorCompanyId\": companyId,\n    \"customerVendorCode\": customerVendorCode,\n    \"paymentTermCode\": \"28000\",\n    \"RegisterDate\": RegisterDate,\n    \"observation\": \"Movimento Importado Via Automação\",\n    \"movementItems\": [\n        {\n            \"aplicationIntegration\": \"T\",    \n            \"companyId\": companyId,\n            \"branchId\": 1,    \n            \"movementId\": 99999999,\n            \"warehouseCode\": \"01.001\",\n            \"sequentialId\": 1,\n            \"sequentialNumber\": 1,\n            \"productId\": 138918 if companyId == \"1\" else (138898 if companyId == \"5\" else (88774 if companyId == \"7\" else (104410 if companyId == \"8\" else None))),\n            \"quantity\": 1.0,\n            \"unitPrice\": unitPrice\n        }\n    ],\n    \"transportData\": [\n        {\n        \"companyId\": companyId,\n        \"movementId\": 99999999\n        }\n    ],\n    \"complementaryFields\": {\n        \"abatret\": \"0\"\n    }\n}\n\nreturn [{\"json\": {\"body\": payload}}]"
+        "pythonCode": "companyId = str(_items[0][\"json\"][\"companyId\"])\nNFeAccesskey = str(_items[0][\"json\"][\"NFeAccesskey\"])\nnumber = str(_items[0][\"json\"][\"number\"])\nseries = str(_items[0][\"json\"][\"series\"])\nRegisterDate = str(_items[0][\"json\"][\"RegisterDate\"])\ncustomerVendorCode = str(_items[0][\"json\"][\"customerVendorCode\"])\nunitPrice = float(_items[0][\"json\"][\"unitPrice\"])\nmovementTypeCode = str(_items[0][\"json\"][\"movementTypeCode\"])\nFiscalNatureId = int(_items[0][\"json\"][\"FiscalNatureId\"])\nproductId = int(_items[0][\"json\"][\"productId\"])\n\npayload = {\n    \"aplicationIntegration\": \"T\",\n    \"internalId\": f\"{companyId}|99999999\",\n    \"companyId\": companyId,\n    \"movementId\": 99999999,\n    \"branchId\": 1,\n    \"movementTypeCode\": movementTypeCode,\n    \"NFeAccesskey\": NFeAccesskey,\n    \"number\": number,\n    \"series\": \"NFSE\",\n    \"type\": \"S\",\n    \"documentTypeCode\": \"NFSE\",\n    \"customerVendorCompanyId\": companyId,\n    \"customerVendorCode\": customerVendorCode,\n    \"paymentTermCode\": \"28000\",\n    \"RegisterDate\": RegisterDate,\n    \"FiscalNatureId\": FiscalNatureId,\n    \"observation\": \"Movimento Importado Via Automação\",\n    \"movementItems\": [\n        {\n            \"aplicationIntegration\": \"T\",    \n            \"companyId\": companyId,\n            \"branchId\": 1,    \n            \"movementId\": 99999999,\n            \"warehouseCode\": \"01.001\",\n            \"sequentialId\": 1,\n            \"sequentialNumber\": 1,\n            \"productId\": productId,\n            \"quantity\": 1.0,\n            \"unitPrice\": unitPrice\n        }\n    ],\n    \"transportData\": [\n        {\n        \"companyId\": companyId,\n        \"movementId\": 99999999\n        }\n    ],\n    \"complementaryFields\": {\n        \"abatret\": \"0\"\n    }\n}\n\nreturn [{\"json\": {\"body\": payload}}]"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -229,7 +247,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n    CASE \n        WHEN EXISTS (SELECT 1 FROM TMOV WHERE CODCOLIGADA = '{{ $json.companyId }}' AND CODTMV = '2.2.04' AND SERIE = 'NFSE' AND NUMEROMOV = '{{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}') THEN 'Sim' \n        ELSE 'Não'\n    END AS Importado",
+        "query": "SELECT \n    CASE \n        WHEN EXISTS (SELECT 1 FROM TMOV WHERE CODCOLIGADA = '{{ $json.companyId }}' AND CODTMV = '{{ $json.movementTypeCode }}' AND SERIE = 'NFSE' AND NUMEROMOV = '{{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Rps.IdentificacaoRps.Numero.padStart(9, '0') }}') THEN 'Sim' \n        ELSE 'Não'\n    END AS Importado",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftSql",
@@ -252,7 +270,8 @@
         "fromEmail": "gabriel.souza@gruposmi.com.br",
         "toEmail": "tecnologia@gruposmi.com.br",
         "subject": "=Erro ao importar nota de serviço",
-        "text": "=Erro ao importar o XML {{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}\n\nMensagem do erro:\n{{ $json.error.message }}\n",
+        "emailFormat": "html",
+        "html": "=<p>Erro ao importar o XML {{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}</p>\n\n<p>Dados do Erro:</p>\n<pre style=\"background-color: #1e1e1e; color: #75be00; padding: 15px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.5; overflow-x: auto;\"><code>{{ (() => { \n  try { \n    const clean = $json.error.message.replace(/^\\d{3} - /, ''); \n    return JSON.stringify(JSON.parse(JSON.parse(clean)), null, 2); \n  } catch (e) { \n    return $json.error.message; \n  } \n})() }}</code></pre>",
         "options": {}
       },
       "id": "32da3c36-c09e-4340-8047-6bff001007b0",
@@ -274,7 +293,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}') \n\tAND CGCCFO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') || $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cpf?.replace(/^(\\d{3})(\\d{3})(\\d{3})(\\d{2})/, '$1.$2.$3-$4') }}'",
+        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode,\n\tCASE\n\t\tWHEN CODCOLIGADA IN (1, 5) THEN '2.2.04'\n\t\tWHEN CODCOLIGADA IN (7, 8) THEN '2.2.05'\n\t\tELSE NULL\n\tEND AS movementTypeCode,\n\tCASE\n\t\tWHEN CODCOLIGADA = 1 THEN 1395\n\t\tWHEN CODCOLIGADA = 5 THEN 409\n\t\tWHEN CODCOLIGADA = 7 THEN 1802\n\t\tWHEN CODCOLIGADA = 8 THEN 444\n\t\tELSE NULL\n\tEND AS FiscalNatureId,\n\tCASE\n\t\tWHEN CODCOLIGADA = 1 THEN 138918\n\t\tWHEN CODCOLIGADA = 5 THEN 138898\n\t\tWHEN CODCOLIGADA = 7 THEN 88774\n\t\tWHEN CODCOLIGADA = 8 THEN 104410\n\t\tELSE NULL\n\tEND AS productId\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}') \n\tAND CGCCFO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') || $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cpf?.replace(/^(\\d{3})(\\d{3})(\\d{3})(\\d{2})/, '$1.$2.$3-$4') }}'",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftSql",
