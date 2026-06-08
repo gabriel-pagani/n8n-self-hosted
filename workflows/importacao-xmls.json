@@ -274,7 +274,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}') \n\tAND CGCCFO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}'",
+        "query": "SELECT \n\tCODCOLIGADA AS companyId, \n\tCODCFO AS customerVendorCode\n\nFROM FCFO (NOLOCK)\n\nWHERE 1=1\n\tAND CODCOLIGADA IN (SELECT CODCOLIGADA FROM GCOLIGADA WHERE CGC = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.Prestador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') }}') \n\tAND CGCCFO = '{{ $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cnpj?.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})/, '$1.$2.$3/$4-$5') || $json.jsonDocument.CompNfse.Nfse.InfNfse.DeclaracaoPrestacaoServico.InfDeclaracaoPrestacaoServico.TomadorServico.IdentificacaoTomador.CpfCnpj.Cpf?.replace(/^(\\d{3})(\\d{3})(\\d{3})(\\d{2})/, '$1.$2.$3-$4') }}'",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftSql",
