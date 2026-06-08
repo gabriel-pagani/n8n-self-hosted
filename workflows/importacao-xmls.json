@@ -272,7 +272,7 @@
         "toEmail": "tecnologia@gruposmi.com.br",
         "subject": "=Erro ao importar nota de serviço",
         "emailFormat": "html",
-        "html": "=<p>Erro ao importar a nota {{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}</p>\n\n<p>Dados do Erro:</p>\n<pre style=\"background-color: #1e1e1e; color: #75be00; padding: 15px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.5; overflow-x: auto;\"><code>{{ (() => { \n  try { \n    const clean = $json.error.message.replace(/^\\d{3} - /, ''); \n    return JSON.stringify(JSON.parse(JSON.parse(clean)), null, 2); \n  } catch (e) { \n    return $json.error.message; \n  } \n})() }}</code></pre>",
+        "html": "=<p>Erro ao importar a nota {{ $('Para cada XML').item.json.jsonDocument.CompNfse.Nfse.InfNfse.CodigoVerificacao }}</p>\n\n<p>Dados do Erro:</p>\n<pre style=\"background-color: #1e1e1e; color: #ffffff; padding: 15px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.5; overflow-x: auto;\"><code>{{ (() => { \n  try { \n    const clean = $json.error.message.replace(/^\\d{3} - /, ''); \n    return JSON.stringify(JSON.parse(JSON.parse(clean)), null, 2); \n  } catch (e) { \n    return $json.error.message; \n  } \n})() }}</code></pre>",
         "options": {}
       },
       "id": "32da3c36-c09e-4340-8047-6bff001007b0",
