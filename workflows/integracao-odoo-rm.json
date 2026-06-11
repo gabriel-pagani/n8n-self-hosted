@@ -1,0 +1,603 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n\tcase\n        when tproduto.codcolprd = 6 then 1\n        else null\n    end as [Empresa],\n    tproduto.idprd as [Identificador], \n\ttproduto.codigoprd as [SKU], \n\ttproduto.nomefantasia as [Nome], \n\tcase\n\t\twhen tprodutodef.codundcontrole = 'BD18' then 31\n\t\twhen tprodutodef.codundcontrole = 'BD20' then 32\n\t\twhen tprodutodef.codundcontrole = 'BL50' then 33\n\t\twhen tprodutodef.codundcontrole = 'C25KG' then 34\n\t\twhen tprodutodef.codundcontrole = 'CT' then 35\n\t\twhen tprodutodef.codundcontrole = 'CX' then 36\n\t\twhen tprodutodef.codundcontrole = 'G' then 15\n\t\twhen tprodutodef.codundcontrole = 'JG' then 37\n\t\twhen tprodutodef.codundcontrole = 'KG' then 16\n\t\twhen tprodutodef.codundcontrole = 'L' then 13\n\t\twhen tprodutodef.codundcontrole = 'LT' then 13\n\t\twhen tprodutodef.codundcontrole = 'LTS' then 13\n\t\twhen tprodutodef.codundcontrole = 'M' then 9\n\t\twhen tprodutodef.codundcontrole = 'M2' then 11\n\t\twhen tprodutodef.codundcontrole = 'M3' then 38\n\t\twhen tprodutodef.codundcontrole = 'ML' then 39\n\t\twhen tprodutodef.codundcontrole = 'PC' then 40\n\t\twhen tprodutodef.codundcontrole = 'PR' then 41\n\t\twhen tprodutodef.codundcontrole = 'RL' then 42\n\t\twhen tprodutodef.codundcontrole = 'RL100' then 43\n\t\twhen tprodutodef.codundcontrole = 'SC25' then 44\n\t\twhen tprodutodef.codundcontrole = 'SC50' then 45\n\t\twhen tprodutodef.codundcontrole = 'TON' then 17\n\t\twhen tprodutodef.codundcontrole = 'UN' then 1\n\t\twhen tprodutodef.codundcontrole = 'UND' then 1\n\t\telse null\n\tend as [Unidade],\n    tprodutodef.custounitario as [Custo],\n\tcase\n\t\twhen tprdfiscal.situacaomercadoria = '01' then 11 /*Mercadoria para Revenda*/\n\t\twhen tprdfiscal.situacaomercadoria = '02' then 12 /*Matéria Prima*/\n\t\twhen tprdfiscal.situacaomercadoria = '03' then 13 /*Produto em Elaboração*/\n\t\twhen tprdfiscal.situacaomercadoria = '04' then 14 /*Produto Acabado*/\n\t\twhen tprdfiscal.situacaomercadoria = '05' then 15 /*Material de Acondicionamento e Embalagem*/\n\t\twhen tprdfiscal.situacaomercadoria = '06' then 16 /*Mercadoria Recebida em Consignação*/\n\t\twhen tprdfiscal.situacaomercadoria = '07' then 17 /*Outras Mercadorias ou Produtos*/\n\t\twhen tprdfiscal.situacaomercadoria = '08' then 18 /*Embalagem*/\n\t\twhen tprdfiscal.situacaomercadoria = '09' then 19 /*Subproduto*/\n\t\twhen tprdfiscal.situacaomercadoria = '10' then 20/*Produto Intermediário*/\n\t\twhen tprdfiscal.situacaomercadoria = '11' then 21 /*Material de Uso e Consumo*/\n\t\twhen tprdfiscal.situacaomercadoria = '12' then 22 /*Ativo Imobilizado*/\n\t\twhen tprdfiscal.situacaomercadoria = '13' then 23 /*Serviços*/\n\t\twhen tprdfiscal.situacaomercadoria = '14' then 24 /*Outras*/\n\t\twhen tprdfiscal.situacaomercadoria = '15' then 25 /*Outros Insumos*/\n\t\twhen tprdfiscal.situacaomercadoria = '16' then 26 /*Bens Almoxarifado*/\n\t\telse null\n\tend as [Categoria],\n\tcase\n\t\twhen tprodutodef.codtb4fat = '0000' then 7 /*Tecnologia*/\n\t\twhen tprodutodef.codtb4fat = '0002' then 8 /*Almoxarifado*/\n\t\twhen tprodutodef.codtb4fat = '0003' then 5 /*Metalúrgica*/\n\t\twhen tprodutodef.codtb4fat = '0004' then 6 /*Placas*/\n\t\twhen tprodutodef.codtb4fat = '0005' then 3/*tachas*/\n\t\twhen tprodutodef.codtb4fat = '0009' then 2 /*Tintas*/\n\t\twhen tprodutodef.codtb4fat = '0010' then 4 /*Microesferas*/\n\t\twhen tprodutodef.codtb4fat = '0011' then 9 /*Suporte de Placa*/\n\t\twhen tprodutodef.codtb4fat = '9999' then 10 /*Genérico*/\n\t\telse null\n\tend as [Grupo]\n\t\nfrom tproduto (nolock)\n\tjoin tprdfiscal (nolock) on (\n\t\ttprdfiscal.codcoligada = tproduto.codcolprd and\n\t\ttprdfiscal.idprd = tproduto.idprd\n\t)\n\tjoin tprodutodef (nolock) on (\n\t\ttprodutodef.codcoligada = tproduto.codcolprd and\n\t\ttprodutodef.idprd = tproduto.idprd\n\t)\n\t\nwhere 1=1\n\tand tproduto.codcolprd = 6\n\tand tproduto.inativo = 0\n\norder by\n    tproduto.idprd\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftSql",
+      "typeVersion": 1.1,
+      "position": [
+        -96,
+        80
+      ],
+      "id": "7e2a492c-60a8-4fe1-b5b8-7ea71866dfa0",
+      "name": "Consulta Produtos",
+      "credentials": {
+        "microsoftSql": {
+          "id": "d5wJRoyLLTIDzOn8",
+          "name": "SQL Server"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        112,
+        80
+      ],
+      "id": "3131982b-77d3-4310-90df-55965922bba7",
+      "name": "Para Cada Produto"
+    },
+    {
+      "parameters": {
+        "resource": "custom",
+        "customResource": "product.template",
+        "fieldsToCreateOrUpdate": {
+          "fields": [
+            {
+              "fieldName": "x_studio_idprd",
+              "fieldValue": "={{ $('Para Cada Produto').item.json.Identificador }}"
+            },
+            {
+              "fieldName": "x_studio_codigoprd",
+              "fieldValue": "={{ $('Para Cada Produto').item.json.SKU }}"
+            },
+            {
+              "fieldName": "name",
+              "fieldValue": "={{ $('Para Cada Produto').item.json.Nome }}"
+            },
+            {
+              "fieldName": "uom_id",
+              "fieldValue": "={{ $('Para Cada Produto').item.json.Unidade }}"
+            },
+            {
+              "fieldName": "standard_price",
+              "fieldValue": "={{ $('Para Cada Produto').item.json.Custo }}"
+            },
+            {
+              "fieldName": "categ_id",
+              "fieldValue": "={{ $('Para Cada Produto').item.json.Categoria }}"
+            },
+            {
+              "fieldName": "x_studio_grupo_de_produto",
+              "fieldValue": "={{ $('Para Cada Produto').item.json.Grupo }}"
+            },
+            {
+              "fieldName": "company_id",
+              "fieldValue": "={{ $('Para Cada Produto').item.json.Empresa }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.odoo",
+      "typeVersion": 1,
+      "position": [
+        928,
+        80
+      ],
+      "id": "22bea6f2-38b0-487d-985a-16c69ff3415f",
+      "name": "Cadastra Produto",
+      "credentials": {
+        "odooApi": {
+          "id": "5VU8grbEiBW7TD1s",
+          "name": "Odoo Account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        416,
+        -32
+      ],
+      "id": "5d509ae7-e19a-4e8e-bc5a-9d456e8424a2",
+      "name": "Fim"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select \n    case \n        when exists (select 1 from product_template where x_studio_idprd = {{ $json.Identificador }} and x_studio_codigoprd = '{{ $json.SKU }}') then 'Sim' \n        else 'Não'\n    end as Cadastrado",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        416,
+        192
+      ],
+      "id": "be110cbf-7aeb-4f55-90ac-3338881af45e",
+      "name": "Consulta Redundância",
+      "credentials": {
+        "postgres": {
+          "id": "MpDZ1NfMzR0LLDD6",
+          "name": "Postgres Odoo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5405feae-4b18-4b96-b354-e11afb65da72",
+              "leftValue": "={{ $json.cadastrado }}",
+              "rightValue": "Não",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        192
+      ],
+      "id": "0c1e1a49-17fe-4f43-9ce4-928aa874c5c4",
+      "name": "Se"
+    },
+    {
+      "parameters": {
+        "content": "## Importação de Produtos do RM para o Odoo",
+        "height": 512,
+        "width": 1472,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -352,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "f488111a-7f1c-4921-8974-7956a198a248",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Importação de Solicitação de Compra do Odoo para o RM",
+        "height": 512,
+        "width": 1924,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1136,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "8b471b7d-80a4-4051-9be0-33823b2660a5",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -304,
+        80
+      ],
+      "id": "8e913b43-5a48-4622-8c93-141eca72908e",
+      "name": "Cronómetro"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7f127ecd-8880-4a51-a549-5fac522778e8",
+              "name": "companyId",
+              "value": "={{ $json.companyid }}",
+              "type": "number"
+            },
+            {
+              "id": "e884f701-3bcc-4ff9-9bdc-f25f91049c84",
+              "name": "productId",
+              "value": "={{ $json.productid }}",
+              "type": "number"
+            },
+            {
+              "id": "9c7b9f51-54ce-4d25-94b1-8985294dfe05",
+              "name": "quantity",
+              "value": "={{ $json.quantity }}",
+              "type": "string"
+            },
+            {
+              "id": "7e8044f3-54ce-4197-ba1d-699878fde5e3",
+              "name": "registerDate",
+              "value": "={{ $now.setZone('UTC').toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "85a65fc8-280d-4947-8de8-1be73ca9563e",
+              "name": "deliveryDate",
+              "value": "={{ $json.deliverydate }}",
+              "type": "string"
+            },
+            {
+              "id": "6cbd9eff-e87d-41ea-a5fb-cee048bcf250",
+              "name": "salesman2Code",
+              "value": "={{ $json.salesman2code }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2112,
+        176
+      ],
+      "id": "38308823-8c38-4a88-981b-df54d1be2d6b",
+      "name": "Padroniza Dados"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "companyId = str(_items[0][\"json\"][\"companyId\"])\nregisterDate = str(_items[0][\"json\"][\"registerDate\"])\ndeliveryDate = str(_items[0][\"json\"][\"deliveryDate\"])\nsalesman2Code = str(_items[0][\"json\"][\"salesman2Code\"])\n\nmovementItems = []\n\nfor index, item in enumerate(_items):\n    productId = int(item[\"json\"][\"productId\"])\n    quantity = float(item[\"json\"][\"quantity\"])\n\n    movementItems.append({\n        \"sequentialId\": index + 1,\n        \"sequentialNumber\": index + 1,\n        \"productId\": productId,\n        \"quantity\": quantity\n    })\n\npayload = {\n    \"aplicationIntegration\": \"T\",\n    \"internalId\": f\"{companyId}|99999999\",\n    \"companyId\": companyId,\n    \"movementId\": 99999999,\n    \"type\": \"A\",\n    \"movementTypeCode\": \"1.1.01\",\n    \"branchId\": 1,\n    \"WarehouseCode\": \"01.001\",\n    \"RegisterDate\": registerDate,\n    \"DeliveryDate\": deliveryDate,\n    \"CostCenterCode\": \"01.01.04\",\n    \"DepartmentCode\": \"01.0009\",\n    \"Salesman2Code\": salesman2Code,\n    \"movementItems\": movementItems,\n    \"observation\": \"Solicitação Importada do Odoo\",\n}\n\nreturn [{\"json\": {\"body\": payload}}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2320,
+        176
+      ],
+      "id": "af4a3c84-0e40-4723-9b0f-458e1585e1d2",
+      "name": "Preenche Payload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://apptotvs.sinasc.com.br:8051/api/mov/v1/Movements",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2528,
+        176
+      ],
+      "id": "1ce815fd-7454-42a7-807d-6507be455cf0",
+      "name": "Registra Solicitação",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "mPB3uEuimKz6VDlW",
+          "name": "Rm Admin User"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        1184,
+        64
+      ],
+      "id": "a1940dd7-1c80-43aa-a2c3-9d8c7bbdc84d",
+      "name": "Cronómetro 2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select \n    res_company.x_studio_codcoligada as companyId,\n    product_template.x_studio_idprd as productId,\n    purchase_order_line.product_qty as quantity,\n\tpurchase_order.date_planned as deliveryDate,\n\thr_employee.x_studio_codven2 as salesman2Code\n    \nfrom purchase_order\n\tjoin res_company on (\n\t\tpurchase_order.company_id = res_company.id\n\t)\n\t\n\tjoin purchase_order_line on (\n\t\tpurchase_order_line.company_id = purchase_order.company_id and\n\t\tpurchase_order_line.order_id = purchase_order.id\n\t)\n\t\n\tjoin product_template on (\n\t\tproduct_template.company_id = purchase_order_line.company_id and\n\t\tproduct_template.id = purchase_order_line.product_id\n\t)\n\n\tjoin res_users on (\n\t\tres_users.company_id = purchase_order.company_id and\n\t\tres_users.id = purchase_order.user_id\n\t)\n\t\n\tjoin hr_employee on (\n\t\thr_employee.company_id = res_users.company_id and\n\t\thr_employee.user_id = res_users.id\n\t)\n\nwhere 1=1\n    and purchase_order.id = {{ $json.id }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1904,
+        176
+      ],
+      "id": "8a2c5ac0-9db8-4a4d-a31c-b158abebaa05",
+      "name": "Consulta Solicitação",
+      "credentials": {
+        "postgres": {
+          "id": "MpDZ1NfMzR0LLDD6",
+          "name": "Postgres Odoo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1600,
+        64
+      ],
+      "id": "d50ce7c7-c4a5-492b-bc50-ccac59073f1d",
+      "name": "Para Cada Solicitação"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select distinct\n    purchase_order.id\n    \nfrom purchase_order\n\tjoin res_company on (\n\t\tpurchase_order.company_id = res_company.id\n\t)\n\t\n\tjoin purchase_order_line on (\n\t\tpurchase_order_line.company_id = purchase_order.company_id and\n\t\tpurchase_order_line.order_id = purchase_order.id\n\t)\n\t\n\tjoin product_template on (\n\t\tproduct_template.company_id = purchase_order_line.company_id and\n\t\tproduct_template.id = purchase_order_line.product_id\n\t)\n\n\tjoin res_users on (\n\t\tres_users.company_id = purchase_order.company_id and\n\t\tres_users.id = purchase_order.user_id\n\t)\n\t\n\tjoin hr_employee on (\n\t\thr_employee.company_id = res_users.company_id and\n\t\thr_employee.user_id = res_users.id\n\t)\n\nwhere \n    purchase_order.x_idmov is null\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1392,
+        64
+      ],
+      "id": "c10da152-aea3-4aa7-9af4-4118f8833376",
+      "name": "Consulta Solicitações",
+      "credentials": {
+        "postgres": {
+          "id": "MpDZ1NfMzR0LLDD6",
+          "name": "Postgres Odoo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "custom",
+        "customResource": "purchase.order",
+        "operation": "update",
+        "customResourceId": "={{ $('Para Cada Solicitação').item.json.id }}",
+        "fieldsToCreateOrUpdate": {
+          "fields": [
+            {
+              "fieldName": "x_idmov",
+              "fieldValue": "={{ $json.movementId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.odoo",
+      "typeVersion": 1,
+      "position": [
+        2832,
+        64
+      ],
+      "id": "966c60a6-7972-4689-928a-2ac4c26ebedb",
+      "name": "Confirma Importação",
+      "credentials": {
+        "odooApi": {
+          "id": "5VU8grbEiBW7TD1s",
+          "name": "Odoo Account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "connections": {
+    "Consulta Produtos": {
+      "main": [
+        [
+          {
+            "node": "Para Cada Produto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Para Cada Produto": {
+      "main": [
+        [
+          {
+            "node": "Fim",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consulta Redundância",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cadastra Produto": {
+      "main": [
+        [
+          {
+            "node": "Para Cada Produto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Para Cada Produto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta Redundância": {
+      "main": [
+        [
+          {
+            "node": "Se",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se": {
+      "main": [
+        [
+          {
+            "node": "Cadastra Produto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Para Cada Produto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cronómetro": {
+      "main": [
+        [
+          {
+            "node": "Consulta Produtos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Padroniza Dados": {
+      "main": [
+        [
+          {
+            "node": "Preenche Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preenche Payload": {
+      "main": [
+        [
+          {
+            "node": "Registra Solicitação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registra Solicitação": {
+      "main": [
+        [
+          {
+            "node": "Confirma Importação",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Para Cada Solicitação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cronómetro 2": {
+      "main": [
+        [
+          {
+            "node": "Consulta Solicitações",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta Solicitação": {
+      "main": [
+        [
+          {
+            "node": "Padroniza Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Para Cada Solicitação": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Consulta Solicitação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta Solicitações": {
+      "main": [
+        [
+          {
+            "node": "Para Cada Solicitação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirma Importação": {
+      "main": [
+        [
+          {
+            "node": "Para Cada Solicitação",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Para Cada Solicitação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "201d4019418c413f00e6cb40ad343f465452ee63cf8c3a4d19a9d9fec62602b7"
+  }
+}
