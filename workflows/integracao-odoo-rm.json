@@ -158,22 +158,6 @@
     },
     {
       "parameters": {
-        "content": "## Importação de Produtos do RM para o Odoo",
-        "height": 512,
-        "width": 1920,
-        "color": 4
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        1136,
-        -608
-      ],
-      "typeVersion": 1,
-      "id": "f488111a-7f1c-4921-8974-7956a198a248",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
         "content": "## Importação de Solicitação de Compra do Odoo para o RM",
         "height": 512,
         "width": 1924,
@@ -417,6 +401,22 @@
       "typeVersion": 1,
       "id": "3bdd2a6e-926f-4357-91eb-a28cccec1bcf",
       "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Importação de Produtos do RM para o Odoo",
+        "height": 512,
+        "width": 1924,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1136,
+        -608
+      ],
+      "typeVersion": 1,
+      "id": "7bb5d162-70db-45b8-bd5e-cb09e8bb6f01",
+      "name": "Sticky Note"
     }
   ],
   "connections": {
