@@ -9,8 +9,8 @@
       "type": "n8n-nodes-base.microsoftSql",
       "typeVersion": 1.1,
       "position": [
-        -96,
-        80
+        1648,
+        -416
       ],
       "id": "7e2a492c-60a8-4fe1-b5b8-7ea71866dfa0",
       "name": "Consulta Produtos",
@@ -28,8 +28,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        112,
-        80
+        1856,
+        -416
       ],
       "id": "3131982b-77d3-4310-90df-55965922bba7",
       "name": "Para Cada Produto"
@@ -78,8 +78,8 @@
       "type": "n8n-nodes-base.odoo",
       "typeVersion": 1,
       "position": [
-        928,
-        80
+        2672,
+        -416
       ],
       "id": "22bea6f2-38b0-487d-985a-16c69ff3415f",
       "name": "Cadastra Produto",
@@ -96,8 +96,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        416,
-        -32
+        2160,
+        -528
       ],
       "id": "5d509ae7-e19a-4e8e-bc5a-9d456e8424a2",
       "name": "Fim"
@@ -111,8 +111,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        416,
-        192
+        2160,
+        -304
       ],
       "id": "be110cbf-7aeb-4f55-90ac-3338881af45e",
       "name": "Consulta Redundância",
@@ -150,8 +150,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        624,
-        192
+        2368,
+        -304
       ],
       "id": "0c1e1a49-17fe-4f43-9ce4-928aa874c5c4",
       "name": "Se"
@@ -160,13 +160,13 @@
       "parameters": {
         "content": "## Importação de Produtos do RM para o Odoo",
         "height": 512,
-        "width": 1472,
+        "width": 1920,
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -352,
-        -80
+        1136,
+        -608
       ],
       "typeVersion": 1,
       "id": "f488111a-7f1c-4921-8974-7956a198a248",
@@ -199,8 +199,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.3,
       "position": [
-        -304,
-        80
+        1440,
+        -416
       ],
       "id": "8e913b43-5a48-4622-8c93-141eca72908e",
       "name": "Cronómetro"
@@ -252,7 +252,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2112,
+        2144,
         176
       ],
       "id": "38308823-8c38-4a88-981b-df54d1be2d6b",
@@ -261,12 +261,12 @@
     {
       "parameters": {
         "language": "pythonNative",
-        "pythonCode": "companyId = str(_items[0][\"json\"][\"companyId\"])\nregisterDate = str(_items[0][\"json\"][\"registerDate\"])\ndeliveryDate = str(_items[0][\"json\"][\"deliveryDate\"])\nsalesman2Code = str(_items[0][\"json\"][\"salesman2Code\"])\n\nmovementItems = []\n\nfor index, item in enumerate(_items):\n    productId = int(item[\"json\"][\"productId\"])\n    quantity = float(item[\"json\"][\"quantity\"])\n\n    movementItems.append({\n        \"sequentialId\": index + 1,\n        \"sequentialNumber\": index + 1,\n        \"productId\": productId,\n        \"quantity\": quantity\n    })\n\npayload = {\n    \"aplicationIntegration\": \"T\",\n    \"internalId\": f\"{companyId}|99999999\",\n    \"companyId\": companyId,\n    \"movementId\": 99999999,\n    \"type\": \"A\",\n    \"movementTypeCode\": \"1.1.01\",\n    \"branchId\": 1,\n    \"WarehouseCode\": \"01.001\",\n    \"RegisterDate\": registerDate,\n    \"DeliveryDate\": deliveryDate,\n    \"CostCenterCode\": \"01.01.04\",\n    \"DepartmentCode\": \"01.0009\",\n    \"Salesman2Code\": salesman2Code,\n    \"movementItems\": movementItems,\n    \"observation\": \"Solicitação Importada do Odoo\",\n}\n\nreturn [{\"json\": {\"body\": payload}}]"
+        "pythonCode": "companyId = str(_items[0][\"json\"][\"companyId\"])\nregisterDate = str(_items[0][\"json\"][\"registerDate\"])\ndeliveryDate = str(_items[0][\"json\"][\"deliveryDate\"])\nsalesman2Code = str(_items[0][\"json\"][\"salesman2Code\"])\n\nmovementItems = []\n\nfor index, item in enumerate(_items):\n    productId = int(item[\"json\"][\"productId\"])\n    quantity = float(item[\"json\"][\"quantity\"])\n\n    movementItems.append({\n        \"sequentialId\": index + 1,\n        \"sequentialNumber\": index + 1,\n        \"productId\": productId,\n        \"quantity\": quantity\n    })\n\npayload = {\n    \"aplicationIntegration\": \"T\",\n    \"internalId\": f\"{companyId}|99999999\",\n    \"companyId\": companyId,\n    \"movementId\": 99999999,\n    \"type\": \"A\",\n    \"movementTypeCode\": \"1.1.01\",\n    \"branchId\": 1,\n    \"WarehouseCode\": \"01.001\",\n    \"RegisterDate\": registerDate,\n    \"DeliveryDate\": deliveryDate,\n    \"CostCenterCode\": \"\",\n    \"DepartmentCode\": \"\",\n    \"Salesman2Code\": salesman2Code,\n    \"movementItems\": movementItems,\n    \"observation\": \"Solicitação Importada do Odoo\",\n}\n\nreturn [{\"json\": {\"body\": payload}}]"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2320,
+        2352,
         176
       ],
       "id": "af4a3c84-0e40-4723-9b0f-458e1585e1d2",
@@ -286,7 +286,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        2528,
+        2560,
         176
       ],
       "id": "1ce815fd-7454-42a7-807d-6507be455cf0",
@@ -310,7 +310,7 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.3,
       "position": [
-        1184,
+        1216,
         64
       ],
       "id": "a1940dd7-1c80-43aa-a2c3-9d8c7bbdc84d",
@@ -325,7 +325,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1904,
+        1936,
         176
       ],
       "id": "8a2c5ac0-9db8-4a4d-a31c-b158abebaa05",
@@ -344,7 +344,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        1600,
+        1632,
         64
       ],
       "id": "d50ce7c7-c4a5-492b-bc50-ccac59073f1d",
@@ -359,7 +359,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1392,
+        1424,
         64
       ],
       "id": "c10da152-aea3-4aa7-9af4-4118f8833376",
@@ -389,7 +389,7 @@
       "type": "n8n-nodes-base.odoo",
       "typeVersion": 1,
       "position": [
-        2832,
+        2864,
         64
       ],
       "id": "966c60a6-7972-4689-928a-2ac4c26ebedb",
@@ -401,6 +401,22 @@
         }
       },
       "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Importação de Baixa de Estoque do Odoo para o RM",
+        "height": 512,
+        "width": 1924,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1136,
+        448
+      ],
+      "typeVersion": 1,
+      "id": "3bdd2a6e-926f-4357-91eb-a28cccec1bcf",
+      "name": "Sticky Note2"
     }
   ],
   "connections": {
