@@ -86,7 +86,7 @@
       "credentials": {
         "odooApi": {
           "id": "5VU8grbEiBW7TD1s",
-          "name": "Odoo Account"
+          "name": "Odoo User"
         }
       },
       "onError": "continueErrorOutput"
@@ -293,8 +293,8 @@
       "name": "Registra Solicitação",
       "credentials": {
         "httpBasicAuth": {
-          "id": "mPB3uEuimKz6VDlW",
-          "name": "Rm Admin User"
+          "id": "g4QYsmIRsSE8hGsr",
+          "name": "RM User"
         }
       },
       "onError": "continueErrorOutput"
@@ -397,7 +397,7 @@
       "credentials": {
         "odooApi": {
           "id": "5VU8grbEiBW7TD1s",
-          "name": "Odoo Account"
+          "name": "Odoo User"
         }
       },
       "onError": "continueErrorOutput"
